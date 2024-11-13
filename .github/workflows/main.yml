@@ -1,0 +1,71 @@
+name: github-action-test
+
+#workflow 실행시킬 트리거
+on:
+    #main branch에 push나 pull request 이벤트 트리거 설정
+    push:
+        branches: [main]
+
+env:
+    S3_BUCKET_NAME: gasungfa-databases3
+    AWS_REGION: ap-northeast-2
+    CODE_DEPLOY_APPLICATION_NAME: gasungfa-codeDeploy
+    CODE_DEPLOY_DEPLOYMENT_GROUP_NAME: deploy-group
+        
+jobs:
+    build:
+        #아래 os 환경에서 실행
+        runs-on: ubuntu-latest
+
+        steps:
+          # 기본 체크아웃
+            - name: Checkout
+              uses: actions/checkout@v3
+          # correto 21 세팅
+            - name: Setup JAVA
+              uses: actions/setup-java@v4
+              with:
+                distribution: 'corretto'
+                java-version: '21'
+          # gradlew execute 권한 추가
+            - name: Grant execute permission for gradlew
+              run:
+                chmod +x ./gradlew
+              shell: bash
+          #Gradle build
+            - name: Build with Gradle
+              run: ./gradlew build
+              shell: bash
+
+            #- name: Make zip file
+            # run: zip -r ./$GITHUB_SHA.zip Real-Backend/.
+            # shell: bash
+
+          #AWS 인증
+            - name: Configure AWS credentials
+              uses: aws-actions/configure-aws-credentials@v1
+              with:
+                aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+                aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+                aws-region: ${{ env.AWS_REGION }}
+
+          #빌드 결과물 s3버킷에 업로드
+            - name: Upload to S3
+              #run: aws s3 cp --region ap-northeast-2 ./$GITHUB_SHA.zip s3://$S3_BUCKET_NAME/$GITHUB_SHA.zip
+              run: |
+                aws deploy push \
+                  --application-name ${{ env.CODE_DEPLOY_APPLICATION_NAME }} \
+                  --ignore-hidden-files \
+                  --s3-location s3://gasungfa-databases3/$GITHUB_SHA.zip \
+                  --source .
+          #S3 버킷에 있는 파일 대상으로 Code deploy 실행
+            - name: Deploy to AWS EC2 from S3
+              run: |
+                aws deploy create-deployment \
+                    --application-name ${{env.CODE_DEPLOY_APPLICATION_NAME}} \
+                    --deployment-config-name CodeDeployDefault.AllAtOnce \
+                    --deployment-group-name ${{env.CODE_DEPLOY_DEPLOYMENT_GROUP_NAME}} \
+                    --s3-location bucket=$S3_BUCKET_NAME,key=$GITHUB_SHA.zip,bundleType=zip
+
+
+
