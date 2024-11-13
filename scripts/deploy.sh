@@ -1,4 +1,5 @@
 #!/bin/bash
+export PATH=/opt/amazon-corretto-21/java/bin:$PATH
 
 PROJECT_ROOT="/home/ubuntu/Backend"
 
