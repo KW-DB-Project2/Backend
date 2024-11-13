@@ -1,6 +1,4 @@
 #!/bin/bash
-export PATH=/opt/amazon-corretto-21/java/bin:$PATH
-
 PROJECT_ROOT="/home/ubuntu/Backend"
 
 #로그파일 초기화
@@ -29,4 +27,4 @@ fi
 
 DEPLOY_JAR=$DEPLOY_PATH/$JAR_NAME
 echo ">>> DEPLOY_JAR 배포"    >> $PROJECT_ROOT/deploy.log
-nohup java -jar $DEPLOY_JAR >> $PROJECT_ROOT/deploy.log 2>$PROJECT_ROOT/deploy_err.log &
+sudo nohup java -jar $DEPLOY_JAR >> $PROJECT_ROOT/deploy.log 2>$PROJECT_ROOT/deploy_err.log &
