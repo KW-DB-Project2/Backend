@@ -2,6 +2,10 @@
 
 PROJECT_ROOT="/home/ubuntu/Backend"
 
+#로그파일 초기화
+> $PROJECT_ROOT/deploy.log
+> $PROJECT_ROOT/deploy_err.log
+
 BUILD_JAR=$(ls $PROJECT_ROOT/build/libs/db-0.0.1-SNAPSHOT.jar)
 JAR_NAME=$(basename $BUILD_JAR)
 echo ">>> build 파일명: $JAR_NAME" >> $PROJECT_ROOT/deploy.log
