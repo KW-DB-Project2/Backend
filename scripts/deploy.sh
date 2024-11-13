@@ -27,4 +27,5 @@ fi
 
 DEPLOY_JAR=$DEPLOY_PATH/$JAR_NAME
 echo ">>> DEPLOY_JAR 배포"    >> $PROJECT_ROOT/deploy.log
-sudo nohup java -jar $DEPLOY_JAR >> $PROJECT_ROOT/deploy.log 2>$PROJECT_ROOT/deploy_err.log &
+chmod +x $DEPLOY_JAR
+nohup java -jar $DEPLOY_JAR >> $PROJECT_ROOT/deploy.log 2>$PROJECT_ROOT/deploy_err.log &
