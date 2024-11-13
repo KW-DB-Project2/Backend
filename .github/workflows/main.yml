@@ -18,9 +18,15 @@ jobs:
         runs-on: ubuntu-latest
 
         steps:
-          # 기본 체크아웃
+          # 기본 체크아웃 및 민감 정보 application에 추가
             - name: Checkout
               uses: actions/checkout@v3
+
+            - uses: actions/checkout@v3
+            - run: touch ./src/main/resources/application.properties
+            - run: echo "${{ secrets.APPLICATION }}" > ./src/main/resources/application.properties
+            - run: cat ./src/main/resources/application.properties
+
           # correto 21 세팅
             - name: Setup JAVA
               uses: actions/setup-java@v4
@@ -32,6 +38,7 @@ jobs:
               run:
                 chmod +x ./gradlew
               shell: bash
+          
           #Gradle build
             - name: Build with Gradle
               run: ./gradlew build
