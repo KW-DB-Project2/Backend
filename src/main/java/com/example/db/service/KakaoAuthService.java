@@ -4,6 +4,7 @@ import com.example.db.dto.KakaoAccountDTO;
 import com.example.db.dto.KakaoTokenDTO;
 import com.example.db.dto.LoginResponseDTO;
 import com.example.db.entity.Account;
+import com.example.db.dto.ExtraInfoRequest;
 import com.example.db.entity.JwtResponse;
 import com.example.db.entity.RefreshToken;
 import com.example.db.enums.UserRole;
@@ -279,6 +280,18 @@ public class KakaoAuthService {
             loginResponseDto.setLoginSuccess(false);
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(loginResponseDto);
+        }
+    }
+
+    public void updateKakaoExtraInfo(ExtraInfoRequest extraInfoRequest){
+        Optional<Account> byKakaoId = memberRepository.findByKakaoId(extraInfoRequest.getLoginId());
+
+        if(byKakaoId.isPresent()){
+            Account account = byKakaoId.get();
+            account.setPhoneNumber(extraInfoRequest.getPhoneNumber());
+            memberRepository.updatePhoneNumber(account.getLoginId(), account.getPhoneNumber());
+        }else{
+            throw new IllegalArgumentException("User not found");
         }
     }
 
