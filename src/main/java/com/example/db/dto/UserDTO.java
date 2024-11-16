@@ -7,11 +7,18 @@ import lombok.Setter;
 @Setter
 public class UserDTO {
 
-    public UserDTO(String name, String email){
-        this.name = name;
-        this.email = email;
-    }
-
+    private Long loginId;
     private String name;
     private String email;
+    private String phoneNumber;
+    private String role;
+
+    public UserDTO(Long loginId, String name, String email, String phoneNumber, String role){
+        this.loginId = loginId;
+        this.name = name;
+        this.email = email;
+        this.phoneNumber = phoneNumber;
+        this.role = role;
+    }
+
 }

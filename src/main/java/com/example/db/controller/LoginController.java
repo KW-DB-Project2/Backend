@@ -3,11 +3,13 @@ package com.example.db.controller;
 import com.example.db.dto.LoginResponseDTO;
 import com.example.db.dto.UserDTO;
 import com.example.db.entity.Account;
+import com.example.db.dto.ExtraInfoRequest;
 import com.example.db.entity.RefreshTokenRequest;
 import com.example.db.error.CustomExceptions;
 import com.example.db.error.ErrorCode;
 import com.example.db.jdbc.MemberRepository;
 import com.example.db.service.KakaoAuthService;
+import com.example.db.service.LocalAuthService;
 import jakarta.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,6 +20,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.URI;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -31,7 +34,7 @@ public class LoginController {
     private KakaoAuthService authService;
 
     @Autowired
-    private MemberRepository accountRepository;
+    private LocalAuthService localAuthService;
 
 
     @GetMapping("/login/oauth2/code/kakao")
@@ -42,9 +45,18 @@ public class LoginController {
             ResponseEntity<LoginResponseDTO> loginResponse = authService.kakaoLogin(kakaoAccessToken);
 
             if (Objects.requireNonNull(loginResponse.getBody()).isLoginSuccess()) {
+                Account account = loginResponse.getBody().getAccount();
+
                 // 헤더에 JWT 토큰 설정
                 String jwtToken = loginResponse.getHeaders().getFirst("Authorization");
                 response.setHeader("Authorization", jwtToken);
+
+                if(account.getPhoneNumber() == null || account.getPhoneNumber().isEmpty()){
+                    return ResponseEntity.status(HttpStatus.FOUND)
+                            .location(URI.create("/user/extra-info"))
+                            .body(loginResponse.getBody());
+                }
+
                 return loginResponse;
             } else {
                 throw new CustomExceptions.UnauthorizedException("Unauthorized Error", null, "Unauthorized Error", ErrorCode.UNAUTHORIZED);
@@ -53,6 +65,74 @@ public class LoginController {
             e.printStackTrace();
             // 원래 에러 메시지를 그대로 반환
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new LoginResponseDTO());
+        }
+    }
+
+    @PostMapping("/kakao/user/extra-info")
+    public ResponseEntity<?> updateExtraInfo(@RequestBody ExtraInfoRequest extraInfoReqiest){
+        try{
+            authService.updateKakaoExtraInfo(extraInfoReqiest);
+            return ResponseEntity.ok("User information updated successfully");
+        } catch (Exception e){
+            throw new CustomExceptions.InternalServerErrorException("Error message : " + e.getMessage(), e, "Error message : " + e.getMessage(), ErrorCode.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @PostMapping("/register")
+    public ResponseEntity<?> register(@RequestBody Account accountRequest){
+        try{
+            localAuthService.register(accountRequest.getLocalId(),
+                    accountRequest.getPassword(),
+                    accountRequest.getUsername(),
+                    accountRequest.getEmail());
+            return ResponseEntity.ok("User registered successfully");
+        } catch (Exception e){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("failed to register user");
+        }
+    }
+
+    /*
+    @PostMapping("/local/login")
+    public ResponseEntity<?> localLogin(@RequestParam String localId, @RequestParam String password){
+        try{
+            ResponseEntity<LoginResponseDTO> logined = localAuthService.login(localId, password);
+            return ResponseEntity.ok("Login success");
+        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("failed to login");
+        }
+    }
+    */
+    @PostMapping("/local/login")
+    public ResponseEntity<LoginResponseDTO> localLogin(@RequestParam String localId, @RequestParam String password, HttpServletResponse response) {
+        try {
+            // LocalAuthService의 login 메서드 호출
+            LoginResponseDTO loginResponse = localAuthService.login(localId, password);
+
+            // JWT 토큰을 응답 헤더에 설정
+            String jwtToken = loginResponse.getJwtToken();
+            response.setHeader("Authorization", "Bearer " + jwtToken);
+
+            /*
+            // Account 객체를 가져와 전화번호 유무 확인
+            Account account = loginResponse.getAccount();
+
+
+            if (account.getPhoneNumber() == null || account.getPhoneNumber().isEmpty()) {
+                // 전화번호가 없는 경우 추가 정보 입력 페이지로 리다이렉트
+                return ResponseEntity.status(HttpStatus.FOUND)
+                        .location(URI.create("/user/extra-info"))
+                        .body(loginResponse);
+            }
+            */
+
+            // 로그인 성공 시 LoginResponseDTO 반환
+            return ResponseEntity.ok(loginResponse);
+        } catch (Exception e) {
+            e.printStackTrace();
+            // 로그인 실패 시 에러 메시지와 함께 반환
+            LoginResponseDTO errorResponse = new LoginResponseDTO();
+            errorResponse.setLoginSuccess(false);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
         }
     }
 
@@ -70,6 +150,7 @@ public class LoginController {
 
 
 
+    /*
     @GetMapping("/api/user-info")
     public ResponseEntity<?> getUserInfo() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -85,12 +166,13 @@ public class LoginController {
 
         if (accountOptional.isPresent()) {
             Account account = accountOptional.get();
-            UserDTO userDTO = new UserDTO(account.getUsername(), account.getEmail());
+            UserDTO userDTO = new UserDTO(account.getLoginId(), account.getUsername(), account.getEmail(), account.getPhoneNumber(), account.getRole().name());
             return ResponseEntity.ok(userDTO);
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
         }
     }
+    */
 
     @PostMapping("/logout")
     public ResponseEntity<?> logout(@RequestHeader("Authorization") String token) {
