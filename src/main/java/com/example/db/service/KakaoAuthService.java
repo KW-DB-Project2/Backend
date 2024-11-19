@@ -261,7 +261,7 @@ public class KakaoAuthService {
                 // 기존 토큰이 있으면 업데이트
                 existingToken.setToken(refreshJwt);
                 existingToken.setExpiryDate(new Date(System.currentTimeMillis() + jwtUtil.getRefreshExpirationInMs()));
-                refreshTokenRepository.save(existingToken);  // save 메서드로 업데이트합니다.
+                refreshTokenRepository.saveOrUpdate(existingToken);  // save 메서드로 업데이트합니다.
             } else {
                 // 기존 토큰이 없으면 새로 저장
                 saveRefreshToken(account.getLoginId(), refreshJwt);
@@ -305,7 +305,7 @@ public class KakaoAuthService {
             token.setLoginId(loginId);
             token.setToken(refreshToken);
             token.setExpiryDate(new Date(System.currentTimeMillis() + jwtUtil.getRefreshExpirationInMs()));
-            refreshTokenRepository.save(token);
+            refreshTokenRepository.saveOrUpdate(token);
         }
 
     /**

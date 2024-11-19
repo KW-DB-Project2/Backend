@@ -84,7 +84,7 @@ public class MemberRepository {
     public Optional<Account> findByKakaoId(Long loginId){
         String sql = "select id, login_id, username, email, role from account where login_id = ?";
         try {
-            Account account = template.queryForObject(sql, accountRowMapper(), loginId);
+            Account account = template.queryForObject(sql, kakaoAccountRowMapper(), loginId);
             return Optional.of(account);
         } catch (EmptyResultDataAccessException e){
             return Optional.empty();
@@ -137,6 +137,7 @@ public class MemberRepository {
             account.setId(rs.getLong("id"));
             account.setLoginId(rs.getLong("login_id"));
             account.setLocalId(rs.getString("local_id"));
+            account.setPassword(rs.getString("password"));
             account.setUsername(rs.getString("username"));
             account.setEmail(rs.getString("email"));
             account.setPhoneNumber(rs.getString("phone_number"));
@@ -152,11 +153,27 @@ public class MemberRepository {
 
     public Long generateRandomLoginId(int digits){
         Random random = new Random();
-        StringBuilder loginIdBuilder = new StringBuilder();
-        for(int i = 0; i < digits; i++){
-            loginIdBuilder.append(random.nextInt(10));
-        }
-        return Long.parseLong(loginIdBuilder.toString());
+        Long loginId;
+        do {
+            StringBuilder loginIdBuilder = new StringBuilder();
+            for (int i = 0; i < digits; i++) {
+                loginIdBuilder.append(random.nextInt(10));
+            }
+            loginId = Long.parseLong(loginIdBuilder.toString());
+        } while (findByLoginId(loginId).isPresent()); // 중복 확인
+        return loginId;
+    }
+
+    private RowMapper<Account> kakaoAccountRowMapper() {
+        return (rs, rowNum) -> {
+            Account account = new Account();
+            account.setId(rs.getLong("id"));
+            account.setLoginId(rs.getLong("login_id"));
+            account.setUsername(rs.getString("username"));
+            account.setEmail(rs.getString("email"));
+            account.setRole(UserRole.valueOf(rs.getString("role")));
+            return account;
+        };
     }
 
 
