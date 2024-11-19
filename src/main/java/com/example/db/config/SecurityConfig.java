@@ -83,6 +83,7 @@ public class SecurityConfig {
                                 //.requestMatchers("/home/**").authenticated()
                                 .requestMatchers("/logout").permitAll()
                                 .requestMatchers("/api/user-info").permitAll()  //후에 check
+                                .requestMatchers("/edit/user-info").permitAll()
                                 .requestMatchers("/login/**").permitAll()
                                 .requestMatchers("/refresh-token").permitAll()
                                 .requestMatchers("/result/**").permitAll()
@@ -104,6 +105,8 @@ public class SecurityConfig {
                                 .requestMatchers("/home/backtesting_w").permitAll()
                                 .requestMatchers("/backtest/**").permitAll()
                                 .requestMatchers("/backtesting_mine_/**").permitAll()
+                                .requestMatchers("/register").permitAll()
+                                .requestMatchers("/local/**").permitAll()
                                 .anyRequest().authenticated()
                 )
                 //.authenticationProvider(customAuthenticationProvider())
