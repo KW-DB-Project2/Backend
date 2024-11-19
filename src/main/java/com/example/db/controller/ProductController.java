@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/products")
+@RequestMapping("/product")
 public class ProductController {
 
     private final ProductService productService;
@@ -37,7 +37,6 @@ public class ProductController {
         return ResponseEntity.ok(searchResults);
     }
 
-    /*
     @PutMapping("/{productId}")
     public ResponseEntity<?> updateProduct(@PathVariable Long productId, @RequestBody Product product, Authentication authentication) {
         //인증된 사용자 loginId인지 확인
@@ -45,13 +44,10 @@ public class ProductController {
 
         //productId에 userId 검증 추가
         if(productService.isProductOwnedByUser(productId, loginId)) {
-
+            productService.updateProduct(product);
         }
-
-
+        return ResponseEntity.ok("update complete");
     }
-    */
-
 
 
 }
