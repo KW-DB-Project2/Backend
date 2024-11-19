@@ -47,7 +47,7 @@ public class LocalAuthService {
         if(existingToken != null){
             existingToken.setToken(refreshToken);
             existingToken.setExpiryDate(new Date(System.currentTimeMillis() + jwtUtil.getRefreshExpirationInMs()));
-            refreshTokenRepository.save(existingToken);
+            refreshTokenRepository.saveOrUpdate(existingToken);
         }else{
             saveRefreshToken(account.getLoginId(), refreshToken);
         }
@@ -69,7 +69,7 @@ public class LocalAuthService {
         token.setLoginId(loginId);
         token.setToken(refreshToken);
         token.setExpiryDate(new Date(System.currentTimeMillis() + jwtUtil.getRefreshExpirationInMs()));
-        refreshTokenRepository.save(token);
+        refreshTokenRepository.saveOrUpdate(token);
     }
 
 

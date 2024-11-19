@@ -22,6 +22,20 @@ public class RefreshTokenRepository {
         this.template = new JdbcTemplate(dataSource);
     }
 
+    public RefreshToken saveOrUpdate(RefreshToken token) {
+        Optional<RefreshToken> existingToken = findByUserId(token.getLoginId());
+
+        if (existingToken.isPresent()) {
+            // 기존에 존재하면 업데이트
+            update(token);
+            token.setId(existingToken.get().getId()); // 기존 ID를 유지
+        } else {
+            // 존재하지 않으면 새로 삽입
+            save(token);
+        }
+        return token;
+    }
+
     public RefreshToken save(RefreshToken token){
         String sql = "insert into refresh_token (login_id, token, expiry_date) values (?, ?, ?)";
 
@@ -45,8 +59,14 @@ public class RefreshTokenRepository {
         template.update(sql, loginId);
     }
 
+    /*
     public void update(RefreshToken token) {
         String sql = "update refresh_token set token = ?, expiry_date = ? where user_id = ?";
+        template.update(sql, token.getToken(), new java.sql.Date(token.getExpiryDate().getTime()), token.getLoginId());
+    }
+    */
+    public void update(RefreshToken token) {
+        String sql = "update refresh_token set token = ?, expiry_date = ? where login_id = ?";
         template.update(sql, token.getToken(), new java.sql.Date(token.getExpiryDate().getTime()), token.getLoginId());
     }
 

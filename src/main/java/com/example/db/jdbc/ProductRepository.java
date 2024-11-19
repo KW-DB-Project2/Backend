@@ -2,6 +2,7 @@ package com.example.db.jdbc;
 
 import com.example.db.entity.Product;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -22,6 +23,20 @@ public class ProductRepository {
         String sql = "SELECT * FROM products WHERE LOWER(product_title) LIKE LOWER(?)";
         String searchPattern = "%" + title + "%";
         return jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(Product.class), searchPattern);
+    }
+
+    public List<Product> findAllProducts() {
+        String sql = "SELECT * FROM products WHERE PRODUCT_STATUS = 1";
+        return jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(Product.class));
+    }
+
+    public Product findById(Long productId){
+        String sql = "SELECT * FROM products WHERE PRODUCT_ID = ?";
+        try{
+            return jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<>(Product.class), productId);
+        } catch (EmptyResultDataAccessException e) {
+            return null;
+        }
     }
 
     public int save(Product product) {
@@ -49,5 +64,10 @@ public class ProductRepository {
                 product.isProductStatus(),
                 product.getProductImg(),
                 product.getProductId());
+    }
+
+    public int deleteProduct(Long productId){
+        String sql = "DELETE FROM products WHERE product_id = ?";
+        return jdbcTemplate.update(sql,productId);
     }
 }
