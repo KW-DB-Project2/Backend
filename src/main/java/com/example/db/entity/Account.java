@@ -25,12 +25,13 @@ public class Account {
         this.role = role;
     }
 
-    public Account(Long loginId, String localId, String password, String username, String email, UserRole role) {
+    public Account(Long loginId, String localId, String password, String username, String email, String phoneNumber, UserRole role) {
         this.loginId = loginId;
         this.localId = localId;
         this.password = password;
         this.username = username;
         this.email = email;
+        this.phoneNumber = phoneNumber;
         this.role = role;
     }
 
