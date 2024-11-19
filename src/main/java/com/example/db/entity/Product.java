@@ -8,7 +8,7 @@ import lombok.Setter;
 public class Product {
 
     private Long productId;
-    private int userId;
+    private Long userId;
     private String productTitle;
     private String productClass;
     private String productContent;
