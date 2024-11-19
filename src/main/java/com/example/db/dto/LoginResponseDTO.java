@@ -7,6 +7,7 @@ import lombok.Data;
 public class LoginResponseDTO {
 
     private boolean loginSuccess;
+    private boolean isNewUser;
     private Account account;
     private String jwtToken;
     private String refreshToken;

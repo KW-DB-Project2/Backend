@@ -4,7 +4,7 @@ import com.example.db.error.CustomAccessDeniedHandler;
 import com.example.db.error.CustomAuthenticationEntryPoint;
 import com.example.db.jdbc.MemberRepository;
 import com.example.db.jwt.JwtAuthenticationFilter;
-import com.example.db.security.CustomAuthenticationProvider;
+//import com.example.db.security.CustomAuthenticationProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -50,10 +50,12 @@ public class SecurityConfig {
         this.passwordEncoder = passwordEncoder;
     }
 
+    /*
     @Bean
     public CustomAuthenticationProvider customAuthenticationProvider() {
         return new CustomAuthenticationProvider(memberRepository, passwordEncoder);
     }
+    */
 
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {
@@ -104,7 +106,7 @@ public class SecurityConfig {
                                 .requestMatchers("/backtesting_mine_/**").permitAll()
                                 .anyRequest().authenticated()
                 )
-                .authenticationProvider(customAuthenticationProvider())
+                //.authenticationProvider(customAuthenticationProvider())
                 .exceptionHandling(exceptionHandling ->
                         exceptionHandling
                                 .authenticationEntryPoint(authenticationEntryPoint)

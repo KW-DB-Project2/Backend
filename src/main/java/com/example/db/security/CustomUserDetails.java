@@ -8,6 +8,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Collection;
 import java.util.List;
 
+/*
 public class CustomUserDetails implements UserDetails {
 
     private final Long loginId;
@@ -60,3 +61,4 @@ public class CustomUserDetails implements UserDetails {
 
 
 }
+*/
