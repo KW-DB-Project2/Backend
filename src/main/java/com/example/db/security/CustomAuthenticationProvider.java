@@ -1,5 +1,6 @@
 package com.example.db.security;
 
+/*
 import com.example.db.entity.Account;
 import com.example.db.jdbc.MemberRepository;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -52,3 +53,4 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
         return UsernamePasswordAuthenticationToken.class.isAssignableFrom(authentication);
     }
 }
+*/

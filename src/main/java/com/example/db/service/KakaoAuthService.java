@@ -98,9 +98,6 @@ public class KakaoAuthService {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(loginResponseDto);
         }
 
-        System.out.println("Kakao ID : " + account.getLoginId());
-        System.out.println("Account Name : " + account.getUsername());
-        System.out.println("Account Email : " + account.getEmail());
 
         try {
             Account existOwner = memberRepository.findByKakaoId(account.getLoginId()).orElse(null);
@@ -224,7 +221,6 @@ public class KakaoAuthService {
 
             if(adminEmails.contains(account.getEmail())){
                 account.setRole(UserRole.ADMIN);
-                System.out.println("바껴야 하는 account = " + account.getEmail());
             }else {
                 account.setRole(UserRole.USER);
             }
@@ -238,8 +234,10 @@ public class KakaoAuthService {
         try {
             // 이미 존재하는 사용자 확인
             Account existOwner = memberRepository.findByKakaoId(account.getLoginId()).orElse(null);
+            boolean isNewUser = false;
             if (existOwner == null) {
                 // 사용자 없으면 새로 저장
+                isNewUser = true;
                 memberRepository.save(account);
             } else {
                 // 사용자 있으면 기존 사용자 정보 사용
@@ -248,6 +246,9 @@ public class KakaoAuthService {
                     memberRepository.updateRole(existOwner.getLoginId(), account.getRole());
                 }
                 account = existOwner;
+                if(existOwner.getPhoneNumber() == null || existOwner.getPhoneNumber().isEmpty()){
+                    isNewUser = true;
+                }
             }
 
             // 토큰 생성
@@ -270,6 +271,7 @@ public class KakaoAuthService {
             headers.add("Authorization", "Bearer " + jwt);
 
             loginResponseDto.setLoginSuccess(true);
+            loginResponseDto.setNewUser(isNewUser);
             loginResponseDto.setAccount(account);
             loginResponseDto.setJwtToken(jwt);
             loginResponseDto.setRefreshToken(refreshJwt);
