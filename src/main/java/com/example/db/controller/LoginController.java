@@ -88,7 +88,8 @@ public class LoginController {
             localAuthService.register(accountRequest.getLocalId(),
                     accountRequest.getPassword(),
                     accountRequest.getUsername(),
-                    accountRequest.getEmail());
+                    accountRequest.getEmail(),
+                    accountRequest.getPhoneNumber());
             return ResponseEntity.ok("User registered successfully");
         } catch (Exception e){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("failed to register user");

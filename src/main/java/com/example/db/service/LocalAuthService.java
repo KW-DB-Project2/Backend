@@ -26,11 +26,11 @@ public class LocalAuthService {
     private RefreshTokenRepository refreshTokenRepository;
 
 
-    public Account register(String localId, String rawPassword, String username, String email){
+    public Account register(String localId, String rawPassword, String username, String email, String phoneNumber){
         Long loginId = memberRepository.generateRandomLoginId(8);
         String encodePassword = passwordEncoder.encode(rawPassword);
 
-        Account account = new Account(loginId, localId, encodePassword, username, email, UserRole.USER);
+        Account account = new Account(loginId, localId, encodePassword, username, email,phoneNumber, UserRole.USER);
         return memberRepository.save(account);
     }
 
