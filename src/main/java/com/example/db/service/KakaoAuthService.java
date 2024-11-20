@@ -270,6 +270,8 @@ public class KakaoAuthService {
 
             headers.add("Authorization", "Bearer " + jwt);
 
+            System.out.println("!!isNewUser: " + isNewUser);
+
             loginResponseDto.setLoginSuccess(true);
             loginResponseDto.setNewUser(isNewUser);
             loginResponseDto.setAccount(account);

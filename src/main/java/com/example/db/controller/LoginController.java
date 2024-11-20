@@ -1,5 +1,6 @@
 package com.example.db.controller;
 
+import com.example.db.dto.LoginRequestDTO;
 import com.example.db.dto.LoginResponseDTO;
 import com.example.db.dto.UserDTO;
 import com.example.db.entity.Account;
@@ -108,7 +109,34 @@ public class LoginController {
     }
     */
     @PostMapping("/local/login")
-    public ResponseEntity<LoginResponseDTO> localLogin(@RequestParam String localId, @RequestParam String password, HttpServletResponse response) {
+    public ResponseEntity<?> localLogin(@RequestBody LoginRequestDTO loginRequest, HttpServletResponse response) {
+        try {
+            // 요청 데이터 출력 (디버깅)
+            System.out.println("Received login request: " + loginRequest);
+
+            // 서비스 호출
+            LoginResponseDTO loginResponse = localAuthService.login(loginRequest.getLocalId(), loginRequest.getPassword());
+
+            // JWT 토큰 설정
+            String jwtToken = loginResponse.getJwtToken();
+            response.setHeader("Authorization", "Bearer " + jwtToken);
+
+            return ResponseEntity.ok(loginResponse);
+        } catch (IllegalArgumentException e) {
+            System.err.println("Login failed: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Wrong input");
+        } catch (Exception e) {
+            System.err.println("Unexpected error: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("wrong input");
+        }
+    }
+
+
+
+    /*
+    @PostMapping("/local/login")
+    public ResponseEntity<LoginResponseDTO> localLogin(@RequestParam(name = "localId") String localId,
+                                                       @RequestParam(name = "password") String password, HttpServletResponse response) {
         try {
             // LocalAuthService의 login 메서드 호출
             LoginResponseDTO loginResponse = localAuthService.login(localId, password);
@@ -117,18 +145,7 @@ public class LoginController {
             String jwtToken = loginResponse.getJwtToken();
             response.setHeader("Authorization", "Bearer " + jwtToken);
 
-            /*
-            // Account 객체를 가져와 전화번호 유무 확인
-            Account account = loginResponse.getAccount();
 
-
-            if (account.getPhoneNumber() == null || account.getPhoneNumber().isEmpty()) {
-                // 전화번호가 없는 경우 추가 정보 입력 페이지로 리다이렉트
-                return ResponseEntity.status(HttpStatus.FOUND)
-                        .location(URI.create("/user/extra-info"))
-                        .body(loginResponse);
-            }
-            */
 
             // 로그인 성공 시 LoginResponseDTO 반환
             return ResponseEntity.ok(loginResponse);
@@ -140,6 +157,19 @@ public class LoginController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
         }
     }
+    */
+    /*
+            // Account 객체를 가져와 전화번호 유무 확인
+            Account account = loginResponse.getAccount();
+
+
+            if (account.getPhoneNumber() == null || account.getPhoneNumber().isEmpty()) {
+                // 전화번호가 없는 경우 추가 정보 입력 페이지로 리다이렉트
+                return ResponseEntity.status(HttpStatus.FOUND)
+                        .location(URI.create("/user/extra-info"))
+                        .body(loginResponse);
+            }
+            */
 
 
 
