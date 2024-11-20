@@ -22,7 +22,6 @@ public class MypageService {
     private MemberRepository memberRepository;
 
 
-    /*
     public Optional<UserDTO> getUserInfo(){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
@@ -41,7 +40,10 @@ public class MypageService {
                 account.getRole().name()
         ));
     }
-    */
+
+
+
+    /*
     public Optional<UserDTO> getUserInfo() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
@@ -51,8 +53,9 @@ public class MypageService {
 
         // 인증에서 loginId를 String으로 받아 Long으로 변환
         try {
-            Long loginId = Long.parseLong(authentication.getName());
-            Optional<Account> optionalAccount = memberRepository.findByLoginId(loginId);
+            String username = authentication.getName();
+            Optional<Account> optionalAccount = memberRepository.findByUsername(username);
+            System.out.println("user name = " + username);
 
             return optionalAccount.map(account -> new UserDTO(
                     account.getLoginId(),
@@ -65,6 +68,7 @@ public class MypageService {
             return Optional.empty(); // 인증에서 잘못된 값이 있는 경우 처리
         }
     }
+    */
 
 
     /*

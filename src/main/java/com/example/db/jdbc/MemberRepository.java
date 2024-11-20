@@ -112,7 +112,7 @@ public class MemberRepository {
     }
 
     public Optional<Account> findByUsername(String username){
-        String sql = "select id, login_id, username, email, phone_number role from account where username = ?";
+        String sql = "select id, login_id, local_id, password, username, email, phone_number, role from account where username = ?";
         try {
             Account account = template.queryForObject(sql, accountRowMapper(), username);
             return Optional.of(account);
