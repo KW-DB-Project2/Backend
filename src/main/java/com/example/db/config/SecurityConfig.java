@@ -84,6 +84,7 @@ public class SecurityConfig {
                                 .requestMatchers("/logout").permitAll()
                                 .requestMatchers("/api/user-info").permitAll()  //후에 check
                                 .requestMatchers("/edit/user-info").permitAll()
+                                .requestMatchers("/kakao/user/extra-info").permitAll()
                                 .requestMatchers("/login/**").permitAll()
                                 .requestMatchers("/refresh-token").permitAll()
                                 .requestMatchers("/result/**").permitAll()

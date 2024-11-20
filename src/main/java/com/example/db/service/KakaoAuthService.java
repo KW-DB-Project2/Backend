@@ -287,6 +287,7 @@ public class KakaoAuthService {
         }
     }
 
+    /*
     public void updateKakaoExtraInfo(ExtraInfoRequest extraInfoRequest){
         Optional<Account> byKakaoId = memberRepository.findByKakaoId(extraInfoRequest.getLoginId());
 
@@ -296,6 +297,16 @@ public class KakaoAuthService {
             memberRepository.updatePhoneNumber(account.getLoginId(), account.getPhoneNumber());
         }else{
             throw new IllegalArgumentException("User not found");
+        }
+    }
+    */
+
+    public void updateKakaoExtraInfo(ExtraInfoRequest extraInfoRequest) {
+        try {
+            memberRepository.updatePhoneNumber(extraInfoRequest.getLoginId(), extraInfoRequest.getPhoneNumber());
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException("Failed to update Kakao Extra Info");
         }
     }
 

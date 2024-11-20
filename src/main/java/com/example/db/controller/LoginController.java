@@ -71,7 +71,7 @@ public class LoginController {
         }
     }
 
-    /*
+
     @PostMapping("/kakao/user/extra-info")
     public ResponseEntity<?> updateExtraInfo(@RequestBody ExtraInfoRequest extraInfoReqiest){
         try{
@@ -81,7 +81,7 @@ public class LoginController {
             throw new CustomExceptions.InternalServerErrorException("Error message : " + e.getMessage(), e, "Error message : " + e.getMessage(), ErrorCode.INTERNAL_SERVER_ERROR);
         }
     }
-    */
+
 
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody Account accountRequest){
