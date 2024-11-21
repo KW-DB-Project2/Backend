@@ -30,12 +30,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             String jwt = getJwtFromRequest(request);
             if (jwt != null && jwtUtil.validateToken(jwt)) {
                 Claims claims = jwtUtil.getClaimsFromToken(jwt);
-                String username = claims.get("username", String.class);
-                log.info("username== {}", username);
+                Long loginId = Long.valueOf(claims.getSubject()); // subject에서 loginId 추출
+                log.info("loginId== {}", loginId);
 
-                if (username != null) {
+                if (loginId != null) {
                     UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
-                            username, null, Collections.emptyList()); // 권한을 명시적으로 설정
+                            loginId, jwt, Collections.emptyList()); // loginId를 Principal로 설정
 
                     authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
@@ -48,6 +48,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         filterChain.doFilter(request, response);
     }
+
 
     private String getJwtFromRequest(HttpServletRequest request) {
         String bearerToken = request.getHeader("Authorization");

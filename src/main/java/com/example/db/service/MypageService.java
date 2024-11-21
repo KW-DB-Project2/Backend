@@ -4,6 +4,7 @@ import com.example.db.dto.UserDTO;
 import com.example.db.entity.Account;
 import com.example.db.jdbc.MemberRepository;
 import com.example.db.jwt.JwtUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -11,7 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
-
+@Slf4j
 @Service
 public class MypageService {
 
@@ -21,29 +22,7 @@ public class MypageService {
     @Autowired
     private MemberRepository memberRepository;
 
-
-    public Optional<UserDTO> getUserInfo(){
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
-        if(authentication == null || !authentication.isAuthenticated()){
-            return Optional.empty();
-        }
-
-        String username = authentication.getName();
-        Optional<Account> optionalAccount = memberRepository.findByUsername(username);
-
-        return optionalAccount.map(account -> new UserDTO(
-                account.getLoginId(),
-                account.getUsername(),
-                account.getEmail(),
-                account.getPhoneNumber(),
-                account.getRole().name()
-        ));
-    }
-
-
-
-    /*
+    // 유저 정보 조회
     public Optional<UserDTO> getUserInfo() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
@@ -51,12 +30,10 @@ public class MypageService {
             return Optional.empty();
         }
 
-        // 인증에서 loginId를 String으로 받아 Long으로 변환
+        Long loginId;
         try {
-            String username = authentication.getName();
-            Optional<Account> optionalAccount = memberRepository.findByUsername(username);
-            System.out.println("user name = " + username);
-
+            loginId = (Long) authentication.getPrincipal(); // Principal에서 loginId 추출
+            Optional<Account> optionalAccount = memberRepository.findByLoginId(loginId);
             return optionalAccount.map(account -> new UserDTO(
                     account.getLoginId(),
                     account.getUsername(),
@@ -64,55 +41,41 @@ public class MypageService {
                     account.getPhoneNumber(),
                     account.getRole().name()
             ));
-        } catch (NumberFormatException e) {
-            return Optional.empty(); // 인증에서 잘못된 값이 있는 경우 처리
+        } catch (Exception e) {
+            log.error("Error while retrieving user info: {}", e.getMessage());
+            return Optional.empty();
         }
     }
-    */
 
 
-    /*
-    public boolean updateUserInfo(Long loginId, String newEmail, String newPhoneNumber){
-        Optional<Account> byLoginId = memberRepository.findByLoginId(loginId);
-
-        if(byLoginId.isPresent()){
-            Account account = byLoginId.get();
-            account.setEmail(newEmail);
-            account.setPhoneNumber(newPhoneNumber);
-            memberRepository.updateUser(account);
-            return true;
-        }
-        return false;
-    }
-    */
+    // 유저 정보 업데이트
     public boolean updateUserInfo(Long loginId, String newEmail, String newPhoneNumber) {
-        // 최종 검증 (프론트엔드에서 검증했더라도 백엔드에서 다시 확인)
+        // 입력 데이터 유효성 검사
         if (!isValidEmail(newEmail) || !isValidPhoneNumber(newPhoneNumber)) {
-            return false; // 잘못된 데이터는 저장하지 않음
+            return false;
         }
 
-        Optional<Account> byLoginId = memberRepository.findByLoginId(loginId);
-        if (byLoginId.isPresent()) {
-            Account account = byLoginId.get();
+        Optional<Account> accountOpt = memberRepository.findByLoginId(loginId);
+        if (accountOpt.isPresent()) {
+            Account account = accountOpt.get();
             account.setEmail(newEmail);
             account.setPhoneNumber(newPhoneNumber);
-            memberRepository.updateUser(account); // 업데이트 수행
+
+            memberRepository.updateUser(account); // 업데이트 실행
             return true;
         }
         return false;
     }
 
-    // 이메일 검증 유틸리티
+    // 이메일 유효성 검사
     private boolean isValidEmail(String email) {
         return email != null && email.matches("^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$");
     }
 
-    // 전화번호 검증 유틸리티
+    // 전화번호 유효성 검사
     private boolean isValidPhoneNumber(String phoneNumber) {
         return phoneNumber != null && phoneNumber.matches("^[0-9]{10,15}$");
     }
-
-
 }
 
 
