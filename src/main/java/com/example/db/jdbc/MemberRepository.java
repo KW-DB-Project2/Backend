@@ -82,7 +82,7 @@ public class MemberRepository {
 
 
     public Optional<Account> findByKakaoId(Long loginId){
-        String sql = "select id, login_id, username, email, role from account where login_id = ?";
+        String sql = "select id, login_id, username, email, phone_number, role from account where login_id = ?";
         try {
             Account account = template.queryForObject(sql, kakaoAccountRowMapper(), loginId);
             return Optional.of(account);
@@ -171,6 +171,7 @@ public class MemberRepository {
             account.setLoginId(rs.getLong("login_id"));
             account.setUsername(rs.getString("username"));
             account.setEmail(rs.getString("email"));
+            account.setPhoneNumber(rs.getString("phone_number"));
             account.setRole(UserRole.valueOf(rs.getString("role")));
             return account;
         };
