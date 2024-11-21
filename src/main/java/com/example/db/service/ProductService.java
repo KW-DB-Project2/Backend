@@ -44,5 +44,4 @@ public class ProductService {
         return product != null && product.getUserId().equals(userId);
     }
 
-
 }
