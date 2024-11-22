@@ -65,7 +65,7 @@ public class LoginController {
                 throw new CustomExceptions.UnauthorizedException("Unauthorized Error", null, "Unauthorized Error", ErrorCode.UNAUTHORIZED);
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            //e.printStackTrace();
             // 원래 에러 메시지를 그대로 반환
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new LoginResponseDTO());
         }
@@ -178,7 +178,7 @@ public class LoginController {
         try {
             return authService.refreshToken(refreshTokenRequest.getRefreshToken());
         } catch (Exception e) {
-            e.printStackTrace();
+            //e.printStackTrace();
             throw new CustomExceptions.InternalServerErrorException("Error message : " + e.getMessage(), e, "Error message : " + e.getMessage(), ErrorCode.INTERNAL_SERVER_ERROR);
         }
     }
@@ -220,7 +220,7 @@ public class LoginController {
             authService.logout(userId);
             return ResponseEntity.ok().body("Successfully logged out");
         } catch (Exception e) {
-            e.printStackTrace();
+            //e.printStackTrace();
             throw new CustomExceptions.InternalServerErrorException("Error message : " + e.getMessage(), e, "Error message : " + e.getMessage(), ErrorCode.INTERNAL_SERVER_ERROR);
         }
     }
