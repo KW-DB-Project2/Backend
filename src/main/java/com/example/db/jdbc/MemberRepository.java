@@ -131,6 +131,16 @@ public class MemberRepository {
        template.update(sql, phoneNumber, loginId);
     }
 
+    public void updateUsername(Long loginId, String username){
+        String sql = "update account set username = ? where login_id = ?";
+        template.update(sql, username, loginId);
+    }
+
+    public void updateEmail(Long loginId, String email){
+        String sql = "update account set email = ? where login_id = ?";
+        template.update(sql, email, loginId);
+    }
+
     private RowMapper<Account> accountRowMapper(){
         return (rs, rowNum) -> {
             Account account = new Account();
@@ -147,7 +157,7 @@ public class MemberRepository {
     }
 
     public void updateUser(Account account){
-        String sql = "UPDATE account SET email = ?, phone_number = ? WHERE login_id = ?";
+        String sql = "UPDATE account SET username = ?, email = ?, phone_number = ? WHERE login_id = ?";
         template.update(sql, account.getEmail(), account.getPhoneNumber(), account.getLoginId());
     }
 

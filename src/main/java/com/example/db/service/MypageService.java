@@ -47,6 +47,54 @@ public class MypageService {
         }
     }
 
+    public boolean updateUsername(Long loginId, String newUsername) {
+        if(newUsername == null || newUsername.isEmpty()) {
+            return false;
+        }
+
+        Optional<Account> optionalAccount = memberRepository.findByLoginId(loginId);
+        if(optionalAccount.isPresent()) {
+            memberRepository.updateUsername(loginId, newUsername);
+            return true;
+        }
+        return false;
+    }
+
+    public boolean updateEmail(Long loginId, String newEmail) {
+        if(newEmail == null || newEmail.isEmpty()) {
+            return false;
+        }
+
+        if(!isValidEmail(newEmail)) {
+            return false;
+        }
+
+        Optional<Account> optionalAccount = memberRepository.findByLoginId(loginId);
+        if(optionalAccount.isPresent()) {
+            memberRepository.updateEmail(loginId, newEmail);
+            return true;
+        }
+        return false;
+    }
+
+    public boolean updatePhone(Long loginId, String newPhone) {
+        if(newPhone == null || newPhone.isEmpty()) {
+            return false;
+        }
+
+        if(!isValidPhoneNumber(newPhone)) {
+            return false;
+        }
+
+        Optional<Account> optionalAccount = memberRepository.findByLoginId(loginId);
+        if(optionalAccount.isPresent()) {
+            memberRepository.updatePhoneNumber(loginId, newPhone);
+            return true;
+        }
+        return false;
+    }
+
+
 
     // 유저 정보 업데이트
     public boolean updateUserInfo(Long loginId, String newEmail, String newPhoneNumber) {
