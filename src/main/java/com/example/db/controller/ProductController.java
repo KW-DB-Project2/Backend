@@ -53,6 +53,15 @@ public class ProductController {
         }
         return ResponseEntity.ok("update complete");
     }
+    @DeleteMapping("/{productId}")
+    public ResponseEntity<?> deleteProduct(@PathVariable Long productId,Authentication authentication){
+        Long loginId = Long.parseLong(authentication.getName());
+
+        if(productService.isProductOwnedByUser(productId,loginId)){
+            productService.deleteProduct(productId);
+        }
+        return ResponseEntity.ok("delete complete");
+    }
 
 
 }
