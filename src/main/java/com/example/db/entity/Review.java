@@ -15,8 +15,6 @@ public class Review {
     private String reviewTitle;
     private String reviewContent;
     private byte[] reviewImg;
-    private Long createId;
     private Date createTime;
-    private Long updateId;
     private Date updateTime;
 }

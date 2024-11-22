@@ -56,12 +56,12 @@ public class MypageController {
         }
     }
 
-    @PutMapping("/edit/username")
-    public ResponseEntity<?> editUsername(@RequestParam String username) {
+    @PutMapping("/edit/name")
+    public ResponseEntity<?> editUsername(@RequestParam String name) {
         Optional<UserDTO> userInfo = mypageService.getUserInfo();
         if(userInfo.isPresent()) {
             Long loginId = userInfo.get().getLoginId();
-            boolean updateUsername = mypageService.updateUsername(loginId, username);
+            boolean updateUsername = mypageService.updateUsername(loginId, name);
             if(updateUsername) {
                 return ResponseEntity.ok("username updated successfully");
             }else {
