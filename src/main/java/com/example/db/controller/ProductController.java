@@ -7,6 +7,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -22,8 +24,11 @@ public class ProductController {
 
     @PostMapping("/add")
     public ResponseEntity<?> addProduct(@RequestBody Product product) {
+        product.setCreateTime(new Date());
+        product.setUpdateTime(new Date());
         productService.addProduct(product);
-        return ResponseEntity.ok("Product added successfully");
+        product.setProductId(productService.getProductId(product).getFirst().getProductId());
+        return ResponseEntity.ok(product);
     }
 
     @GetMapping

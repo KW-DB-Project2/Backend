@@ -24,6 +24,9 @@ public class ProductService {
     public int addProduct(Product product) {
         return productRepository.save(product);
     }
+    public List<Product> getProductId(Product product){
+        return productRepository.findProductId(product);
+    }
 
     public List<Product> getProducts() {
         return productRepository.findAllProducts();
