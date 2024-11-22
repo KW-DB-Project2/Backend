@@ -7,6 +7,8 @@ import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import java.sql.Timestamp;
+import java.util.Date;
 import java.util.List;
 
 @Repository
@@ -39,9 +41,16 @@ public class ProductRepository {
         }
     }
 
+    public List<Product> findProductId(Product product){
+        String sql = "select product_id from product where product_title = ?";
+        return jdbcTemplate.query(sql,new BeanPropertyRowMapper<>(Product.class),product.getProductTitle());
+    }
+
     public int save(Product product) {
-        String sql = "INSERT INTO product (user_id, product_title, product_class, product_content, product_price, product_status, product_img) " +
-                "VALUES (?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO product (user_id, product_title, product_class, product_content, product_price, product_status, product_img,create_id,create_time,update_id,update_time) " +
+                "VALUES (?, ?, ?, ?, ?, ?, ?,?,?,?,?)";
+        Date createTime = new Date(product.getCreateTime().getTime());  // getTime()으로 밀리초를 얻어 java.sql.Date로 변환
+        Date updateTime = new Date(product.getUpdateTime().getTime());
         return jdbcTemplate.update(sql,
                 product.getUserId(),
                 product.getProductTitle(),
@@ -49,7 +58,11 @@ public class ProductRepository {
                 product.getProductContent(),
                 product.getProductPrice(),
                 product.isProductStatus(),
-                product.getProductImg());
+                product.getProductImg(),
+                product.getCreateId(),
+                createTime,
+                product.getUpdateId(),
+                updateTime);
     }
 
     public int update(Product product) {
