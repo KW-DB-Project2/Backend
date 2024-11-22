@@ -20,18 +20,18 @@ public class ProductRepository {
     }
 
     public List<Product> findByProductTitleContainingIgnoreCase(String title) {
-        String sql = "SELECT * FROM products WHERE LOWER(product_title) LIKE LOWER(?)";
+        String sql = "SELECT * FROM product WHERE LOWER(product_title) LIKE LOWER(?)";
         String searchPattern = "%" + title + "%";
         return jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(Product.class), searchPattern);
     }
 
     public List<Product> findAllProducts() {
-        String sql = "SELECT * FROM products WHERE PRODUCT_STATUS = 1";
+        String sql = "SELECT * FROM product WHERE PRODUCT_STATUS = 1";
         return jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(Product.class));
     }
 
     public Product findById(Long productId){
-        String sql = "SELECT * FROM products WHERE PRODUCT_ID = ?";
+        String sql = "SELECT * FROM product WHERE PRODUCT_ID = ?";
         try{
             return jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<>(Product.class), productId);
         } catch (EmptyResultDataAccessException e) {
@@ -40,7 +40,7 @@ public class ProductRepository {
     }
 
     public int save(Product product) {
-        String sql = "INSERT INTO products (user_id, product_title, product_class, product_content, product_price, product_status, product_img) " +
+        String sql = "INSERT INTO product (user_id, product_title, product_class, product_content, product_price, product_status, product_img) " +
                 "VALUES (?, ?, ?, ?, ?, ?, ?)";
         return jdbcTemplate.update(sql,
                 product.getUserId(),
@@ -53,7 +53,7 @@ public class ProductRepository {
     }
 
     public int update(Product product) {
-        String sql = "UPDATE products SET user_id = ?, product_title = ?, product_class = ?, product_content = ?, " +
+        String sql = "UPDATE product SET user_id = ?, product_title = ?, product_class = ?, product_content = ?, " +
                 "product_price = ?, product_status = ?, product_img = ? WHERE product_id = ?";
         return jdbcTemplate.update(sql,
                 product.getUserId(),
@@ -67,7 +67,7 @@ public class ProductRepository {
     }
 
     public int deleteProduct(Long productId){
-        String sql = "DELETE FROM products WHERE product_id = ?";
+        String sql = "DELETE FROM product WHERE product_id = ?";
         return jdbcTemplate.update(sql,productId);
     }
 }
