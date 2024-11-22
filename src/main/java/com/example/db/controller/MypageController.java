@@ -45,6 +45,64 @@ public class MypageController {
         }
     }
 
+    @GetMapping("/mypage")
+    public ResponseEntity<?> getMypage() {
+        Optional<UserDTO> accountOptional = mypageService.getUserInfo();
+
+        if (accountOptional.isPresent()) {
+            return ResponseEntity.ok(accountOptional.get());
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
+        }
+    }
+
+    @PutMapping("/edit/username")
+    public ResponseEntity<?> editUsername(@RequestParam String username) {
+        Optional<UserDTO> userInfo = mypageService.getUserInfo();
+        if(userInfo.isPresent()) {
+            Long loginId = userInfo.get().getLoginId();
+            boolean updateUsername = mypageService.updateUsername(loginId, username);
+            if(updateUsername) {
+                return ResponseEntity.ok("username updated successfully");
+            }else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
+            }
+        }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
+    }
+
+    @PutMapping("/edit/email")
+    public ResponseEntity<?> editEmail(@RequestParam String email) {
+        Optional<UserDTO> userInfo = mypageService.getUserInfo();
+        if(userInfo.isPresent()) {
+            Long loginId = userInfo.get().getLoginId();
+            boolean updateEmail = mypageService.updateEmail(loginId, email);
+            if(updateEmail) {
+                return ResponseEntity.ok("email updated successfully");
+            }else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
+            }
+        }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
+    }
+
+    @PutMapping("/edit/phone")
+    public ResponseEntity<?> editPhone(@RequestParam String phoneNumber) {
+        Optional<UserDTO> userInfo = mypageService.getUserInfo();
+        if(userInfo.isPresent()) {
+            Long loginId = userInfo.get().getLoginId();
+            boolean updatePhone = mypageService.updatePhone(loginId, phoneNumber);
+            if(updatePhone) {
+                return ResponseEntity.ok("phoneNumber updated successfully");
+            }else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
+            }
+        }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
+    }
+
+
+    /*
     @PutMapping("/edit/user-info")
     public ResponseEntity<?> updateUserInfo(@RequestParam String email, @RequestParam String phoneNumber) {
         Optional<UserDTO> userInfo = mypageService.getUserInfo();
@@ -59,5 +117,6 @@ public class MypageController {
         }
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
     }
+    */
 
 }
