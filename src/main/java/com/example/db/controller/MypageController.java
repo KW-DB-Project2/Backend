@@ -13,6 +13,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
 import java.util.Optional;
 
 
@@ -56,6 +57,7 @@ public class MypageController {
         }
     }
 
+    /*
     @PutMapping("/edit/name")
     public ResponseEntity<?> editUsername(@RequestParam String name) {
         Optional<UserDTO> userInfo = mypageService.getUserInfo();
@@ -70,7 +72,70 @@ public class MypageController {
         }
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
     }
+    */
+    @PutMapping("/edit/name")
+    public ResponseEntity<?> editUsername(@RequestBody Map<String, String> payload) {
+        String name = payload.get("name");
+        if (name == null || name.isEmpty()) {
+            return ResponseEntity.badRequest().body("Name is required");
+        }
 
+        Optional<UserDTO> userInfo = mypageService.getUserInfo();
+        if (userInfo.isPresent()) {
+            Long loginId = userInfo.get().getLoginId();
+            boolean updateUsername = mypageService.updateUsername(loginId, name);
+            if (updateUsername) {
+                return ResponseEntity.ok("Username updated successfully");
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
+            }
+        }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
+    }
+
+    @PutMapping("/edit/phone")
+    public ResponseEntity<?> editPhone(@RequestBody Map<String, String> payload) {
+        String phone = payload.get("phone");
+        if (phone == null || phone.isEmpty()) {
+            return ResponseEntity.badRequest().body("Phone number is required");
+        }
+
+        Optional<UserDTO> userInfo = mypageService.getUserInfo();
+        if (userInfo.isPresent()) {
+            Long loginId = userInfo.get().getLoginId();
+            boolean updatePhone = mypageService.updatePhone(loginId, phone);
+            if (updatePhone) {
+                return ResponseEntity.ok("Phone number updated successfully");
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
+            }
+        }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
+    }
+
+
+
+    @PutMapping("/edit/email")
+    public ResponseEntity<?> editEmail(@RequestBody Map<String, String> payload) {
+        String email = payload.get("email");
+        if (email == null || email.isEmpty()) {
+            return ResponseEntity.badRequest().body("Email is required");
+        }
+
+        Optional<UserDTO> userInfo = mypageService.getUserInfo();
+        if (userInfo.isPresent()) {
+            Long loginId = userInfo.get().getLoginId();
+            boolean updateEmail = mypageService.updateEmail(loginId, email);
+            if (updateEmail) {
+                return ResponseEntity.ok("Email updated successfully");
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
+            }
+        }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
+    }
+
+    /*
     @PutMapping("/edit/email")
     public ResponseEntity<?> editEmail(@RequestParam String email) {
         Optional<UserDTO> userInfo = mypageService.getUserInfo();
@@ -85,7 +150,9 @@ public class MypageController {
         }
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
     }
+    */
 
+    /*
     @PutMapping("/edit/phone")
     public ResponseEntity<?> editPhone(@RequestParam String phoneNumber) {
         Optional<UserDTO> userInfo = mypageService.getUserInfo();
@@ -100,6 +167,7 @@ public class MypageController {
         }
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
     }
+    */
 
 
     /*
