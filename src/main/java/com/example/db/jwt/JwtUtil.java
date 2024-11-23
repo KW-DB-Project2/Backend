@@ -23,12 +23,12 @@ public class JwtUtil {
 
     private final ObjectMapper objectMapper = new ObjectMapper();
 
-    public String generateToken(Long loginId, String email, String username) {
+    public String generateToken(Long id, String email, String username) {
         Date now = new Date();
         Date expiryDate = new Date(now.getTime() + jwtExpirationInMs);
 
         return Jwts.builder()
-                .setSubject(Long.toString(loginId))
+                .setSubject(Long.toString(id))
                 .claim("email", email)
                 .claim("username", username)
                 .setIssuedAt(new Date())
@@ -38,12 +38,12 @@ public class JwtUtil {
     }
 
 
-    public String generateRefreshToken(Long loginId) {
+    public String generateRefreshToken(Long id) {
         Date now = new Date();
         Date expiryDate = new Date(now.getTime() + refreshJwtExpirationInMs);
 
         return Jwts.builder()
-                .setSubject(Long.toString(loginId))
+                .setSubject(Long.toString(id))
                 .setIssuedAt(new Date())
                 .setExpiration(expiryDate)
                 .signWith(SignatureAlgorithm.HS512, jwtSecret)
@@ -51,7 +51,7 @@ public class JwtUtil {
     }
 
 
-    public Long getLoginIdFromToken(String token){
+    public Long getIdFromToken(String token){
         try{
             System.out.println("Token received: " + token);
             if (token.startsWith("Bearer ")){

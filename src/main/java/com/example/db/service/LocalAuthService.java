@@ -40,16 +40,16 @@ public class LocalAuthService {
                 .filter(acc -> passwordEncoder.matches(rawPassword, acc.getPassword()))
                 .orElseThrow(() -> new IllegalArgumentException("Invalid id or password"));
 
-        String jwtToken = jwtUtil.generateToken(account.getLoginId(), account.getEmail(), account.getUsername());
-        String refreshToken = jwtUtil.generateRefreshToken(account.getLoginId());
+        String jwtToken = jwtUtil.generateToken(account.getId(), account.getEmail(), account.getUsername());
+        String refreshToken = jwtUtil.generateRefreshToken(account.getId());
 
-        RefreshToken existingToken = refreshTokenRepository.findByUserId(account.getLoginId()).orElse(null);
+        RefreshToken existingToken = refreshTokenRepository.findByLoginId(account.getId()).orElse(null);
         if(existingToken != null){
             existingToken.setToken(refreshToken);
             existingToken.setExpiryDate(new Date(System.currentTimeMillis() + jwtUtil.getRefreshExpirationInMs()));
             refreshTokenRepository.saveOrUpdate(existingToken);
         }else{
-            saveRefreshToken(account.getLoginId(), refreshToken);
+            saveRefreshToken(account.getId(), refreshToken);
         }
 
         //LoginResponseDTO 생성
@@ -64,9 +64,9 @@ public class LocalAuthService {
 
     }
 
-    private void saveRefreshToken(Long loginId, String refreshToken){
+    private void saveRefreshToken(Long id, String refreshToken){
         RefreshToken token = new RefreshToken();
-        token.setLoginId(loginId);
+        token.setLoginId(id);
         token.setToken(refreshToken);
         token.setExpiryDate(new Date(System.currentTimeMillis() + jwtUtil.getRefreshExpirationInMs()));
         refreshTokenRepository.saveOrUpdate(token);

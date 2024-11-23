@@ -216,8 +216,9 @@ public class LoginController {
                 token = token.substring(7);
             }
             //Long userId = authService.getJwtUtil().getUserIdFromToken(token);
-            Long userId = authService.getJwtUtil().getLoginIdFromToken(token);
-            authService.logout(userId);
+            //Long userId = authService.getJwtUtil().getLoginIdFromToken(token);
+            Long idFromToken = authService.getJwtUtil().getIdFromToken(token);
+            authService.logout(idFromToken);
             return ResponseEntity.ok().body("Successfully logged out");
         } catch (Exception e) {
             //e.printStackTrace();

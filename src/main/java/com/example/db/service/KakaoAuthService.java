@@ -243,7 +243,7 @@ public class KakaoAuthService {
                 // 사용자 있으면 기존 사용자 정보 사용
                 if(!existOwner.getRole().equals(account.getRole())){
                     existOwner.setRole(account.getRole());
-                    memberRepository.updateRole(existOwner.getLoginId(), account.getRole());
+                    memberRepository.updateRole(existOwner.getId(), account.getRole());
                 }
                 account = existOwner;
                 if(existOwner.getPhoneNumber() == null || existOwner.getPhoneNumber().isEmpty()){
@@ -252,11 +252,11 @@ public class KakaoAuthService {
             }
 
             // 토큰 생성
-            String jwt = jwtUtil.generateToken(account.getLoginId(), account.getEmail(), account.getUsername());
-            String refreshJwt = jwtUtil.generateRefreshToken(account.getLoginId());
+            String jwt = jwtUtil.generateToken(account.getId(), account.getEmail(), account.getUsername());
+            String refreshJwt = jwtUtil.generateRefreshToken(account.getId());
 
             // 기존에 존재하는 refreshToken이 있으면 업데이트, 없으면 새로 저장
-            RefreshToken existingToken = refreshTokenRepository.findByUserId(account.getLoginId()).orElse(null);
+            RefreshToken existingToken = refreshTokenRepository.findByLoginId(account.getId()).orElse(null);
 
             if (existingToken != null) {
                 // 기존 토큰이 있으면 업데이트
@@ -265,7 +265,7 @@ public class KakaoAuthService {
                 refreshTokenRepository.saveOrUpdate(existingToken);  // save 메서드로 업데이트합니다.
             } else {
                 // 기존 토큰이 없으면 새로 저장
-                saveRefreshToken(account.getLoginId(), refreshJwt);
+                saveRefreshToken(account.getId(), refreshJwt);
             }
 
             headers.add("Authorization", "Bearer " + jwt);
@@ -303,7 +303,7 @@ public class KakaoAuthService {
 
     public void updateKakaoExtraInfo(ExtraInfoRequest extraInfoRequest) {
         try {
-            memberRepository.updatePhoneNumber(extraInfoRequest.getLoginId(), extraInfoRequest.getPhoneNumber());
+            memberRepository.updatePhoneNumber(extraInfoRequest.getId(), extraInfoRequest.getPhoneNumber());
         } catch (Exception e) {
             e.printStackTrace();
             throw new RuntimeException("Failed to update Kakao Extra Info");
@@ -329,11 +329,12 @@ public class KakaoAuthService {
     public ResponseEntity<?> refreshToken(String refreshToken) {
             if (jwtUtil.validateToken(refreshToken) && !jwtUtil.isTokenExpired(refreshToken)) {
                 //Long userId = jwtUtil.getUserIdFromToken(refreshToken);
-                Long userId = jwtUtil.getLoginIdFromToken(refreshToken);
+                //Long userId = jwtUtil.getLoginIdFromToken(refreshToken);
+                Long idFromToken = jwtUtil.getIdFromToken(refreshToken);
                 String email = jwtUtil.getEmailFromToken(refreshToken);
                 String username = jwtUtil.getUsernameFromToken(refreshToken);
                 //String newJwt = jwtUtil.generateToken(userId, email, username);
-                String newJwt = jwtUtil.generateToken(userId, email, username);
+                String newJwt = jwtUtil.generateToken(idFromToken, email, username);
                 return ResponseEntity.ok(new JwtResponse(newJwt, refreshToken));
             } else {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid or expired refresh token");
