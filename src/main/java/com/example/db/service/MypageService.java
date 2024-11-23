@@ -30,12 +30,12 @@ public class MypageService {
             return Optional.empty();
         }
 
-        Long loginId;
+        Long id;
         try {
-            loginId = (Long) authentication.getPrincipal(); // Principal에서 loginId 추출
-            Optional<Account> optionalAccount = memberRepository.findByLoginId(loginId);
+            id = (Long) authentication.getPrincipal(); // Principal에서 loginId 추출
+            Optional<Account> optionalAccount = memberRepository.findById(id);
             return optionalAccount.map(account -> new UserDTO(
-                    account.getLoginId(),
+                    account.getId(),
                     account.getUsername(),
                     account.getEmail(),
                     account.getPhoneNumber(),
@@ -47,20 +47,20 @@ public class MypageService {
         }
     }
 
-    public boolean updateUsername(Long loginId, String newUsername) {
+    public boolean updateUsername(Long id, String newUsername) {
         if(newUsername == null || newUsername.isEmpty()) {
             return false;
         }
 
-        Optional<Account> optionalAccount = memberRepository.findByLoginId(loginId);
+        Optional<Account> optionalAccount = memberRepository.findById(id);
         if(optionalAccount.isPresent()) {
-            memberRepository.updateUsername(loginId, newUsername);
+            memberRepository.updateUsername(id, newUsername);
             return true;
         }
         return false;
     }
 
-    public boolean updateEmail(Long loginId, String newEmail) {
+    public boolean updateEmail(Long id, String newEmail) {
         if(newEmail == null || newEmail.isEmpty()) {
             return false;
         }
@@ -69,32 +69,33 @@ public class MypageService {
             return false;
         }
 
-        Optional<Account> optionalAccount = memberRepository.findByLoginId(loginId);
+        Optional<Account> optionalAccount = memberRepository.findById(id);
         if(optionalAccount.isPresent()) {
-            memberRepository.updateEmail(loginId, newEmail);
+            memberRepository.updateEmail(id, newEmail);
             return true;
         }
         return false;
     }
 
-    public boolean updatePhone(Long loginId, String newPhone) {
-        if(newPhone == null || newPhone.isEmpty()) {
+    public boolean updatePhoneNumber(Long id, String newPhoneNumber) {
+        if(newPhoneNumber == null || newPhoneNumber.isEmpty()) {
             return false;
         }
 
-        if(!isValidPhoneNumber(newPhone)) {
-            return false;
-        }
+        //if(!isValidPhoneNumber(newPhoneNumber)) {
+        //    return false;
+        //}
 
-        Optional<Account> optionalAccount = memberRepository.findByLoginId(loginId);
+        Optional<Account> optionalAccount = memberRepository.findById(id);
         if(optionalAccount.isPresent()) {
-            memberRepository.updatePhoneNumber(loginId, newPhone);
+            memberRepository.updatePhoneNumber(id, newPhoneNumber);
             return true;
         }
         return false;
     }
 
 
+    /*
 
     // 유저 정보 업데이트
     public boolean updateUserInfo(Long loginId, String newEmail, String newPhoneNumber) {
@@ -114,16 +115,19 @@ public class MypageService {
         }
         return false;
     }
+    */
 
     // 이메일 유효성 검사
     private boolean isValidEmail(String email) {
         return email != null && email.matches("^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$");
     }
 
+    /*
     // 전화번호 유효성 검사
     private boolean isValidPhoneNumber(String phoneNumber) {
         return phoneNumber != null && phoneNumber.matches("^[0-9]{10,15}$");
     }
+    */
 }
 
 

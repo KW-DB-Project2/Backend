@@ -7,14 +7,14 @@ import lombok.Setter;
 @Setter
 public class UserDTO {
 
-    private Long loginId;
+    private Long id;
     private String name;
     private String email;
     private String phoneNumber;
     private String role;
 
-    public UserDTO(Long loginId, String name, String email, String phoneNumber, String role){
-        this.loginId = loginId;
+    public UserDTO(Long id, String name, String email, String phoneNumber, String role){
+        this.id = id;
         this.name = name;
         this.email = email;
         this.phoneNumber = phoneNumber;

@@ -23,7 +23,7 @@ public class RefreshTokenRepository {
     }
 
     public RefreshToken saveOrUpdate(RefreshToken token) {
-        Optional<RefreshToken> existingToken = findByUserId(token.getLoginId());
+        Optional<RefreshToken> existingToken = findByLoginId(token.getLoginId());
 
         if (existingToken.isPresent()) {
             // 기존에 존재하면 업데이트
@@ -70,7 +70,7 @@ public class RefreshTokenRepository {
         template.update(sql, token.getToken(), new java.sql.Date(token.getExpiryDate().getTime()), token.getLoginId());
     }
 
-    public Optional<RefreshToken> findByUserId(Long loginId){
+    public Optional<RefreshToken> findByLoginId(Long loginId){
         String sql = "select id, login_id, token, expiry_date from refresh_token where login_id = ?";
         try {
             RefreshToken refreshToken = template.queryForObject(sql, refreshTokenRowMapper(), loginId);
