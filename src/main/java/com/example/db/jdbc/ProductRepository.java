@@ -65,18 +65,19 @@ public class ProductRepository {
                 updateTime);
     }
 
-    public int update(Product product) {
-        String sql = "UPDATE product SET user_id = ?, product_title = ?, product_class = ?, product_content = ?, " +
+    public List<Product> update(Product product) {
+        String sql = "UPDATE product SET user_id = ?, product_title = ?, product_content = ?, " +
                 "product_price = ?, product_status = ?, product_img = ? WHERE product_id = ?";
-        return jdbcTemplate.update(sql,
+        jdbcTemplate.update(sql,
                 product.getUserId(),
                 product.getProductTitle(),
-                product.getProductClass(),
                 product.getProductContent(),
                 product.getProductPrice(),
                 product.isProductStatus(),
                 product.getProductImg(),
                 product.getProductId());
+        String returnsql = "select * from product where product_id =?";
+        return jdbcTemplate.query(returnsql,new BeanPropertyRowMapper<>(Product.class),product.getProductId());
     }
 
     public int deleteProduct(Long productId){

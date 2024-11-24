@@ -2,6 +2,7 @@ package com.example.db.controller;
 
 import com.example.db.entity.Product;
 import com.example.db.service.ProductService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -11,6 +12,7 @@ import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 
+@Slf4j
 @RestController
 @RequestMapping("/product")
 public class ProductController {
@@ -44,23 +46,28 @@ public class ProductController {
 
     @PutMapping("/{productId}")
     public ResponseEntity<?> updateProduct(@PathVariable Long productId, @RequestBody Product product, Authentication authentication) {
-        //인증된 사용자 loginId인지 확인
-        Long loginId = Long.parseLong(authentication.getName());
-
         //productId에 userId 검증 추가
-        if(productService.isProductOwnedByUser(productId, loginId)) {
-            productService.updateProduct(product);
-        }
-        return ResponseEntity.ok("update complete");
+        return ResponseEntity.ok(productService.updateProduct(product));
+
+//        try{
+//            Long userId = (Long)authentication.getPrincipal();
+//            if(productService.isProductOwnedByUser(productId,userId)){
+//                return ResponseEntity.ok(productService.updateProduct(product));
+//            }
+//
+//        }catch(Exception e){
+//            log.error("product's userId is not match user's id");
+//        }
+//        return ResponseEntity.ok("update not complete");
     }
     @DeleteMapping("/{productId}")
     public ResponseEntity<?> deleteProduct(@PathVariable Long productId,Authentication authentication){
-        Long loginId = Long.parseLong(authentication.getName());
-
-        if(productService.isProductOwnedByUser(productId,loginId)){
-            productService.deleteProduct(productId);
-        }
-        return ResponseEntity.ok("delete complete");
+        //Long id = (Long)authentication.getPrincipal();
+        productService.deleteProduct(productId);
+//        if(productService.isProductOwnedByUser(productId,id)){
+//            productService.deleteProduct(productId);
+//        }
+        return ResponseEntity.ok("delete complete successfully!");
     }
 
 
