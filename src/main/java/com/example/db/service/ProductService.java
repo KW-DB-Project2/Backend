@@ -5,6 +5,8 @@ import com.example.db.jdbc.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.nio.charset.StandardCharsets;
+import java.util.Base64;
 import java.util.List;
 
 @Service
@@ -32,16 +34,17 @@ public class ProductService {
         return productRepository.findAllProducts();
     }
 
-    public boolean updateProduct(Product product) {
-        int rows = productRepository.update(product);
-        return rows > 0;
+    public List<Product> updateProduct(Product product){
+        return productRepository.update(product);
     }
+
 
     public boolean deleteProduct(Long productId) {
         int deleteRows = productRepository.deleteProduct(productId);
         return deleteRows > 0;
     }
 
+    //해당 user의 id와 product의 userId와 비교하여 맞으면 true, 아니면 false
     public boolean isProductOwnedByUser(Long productId, Long userId){
         Product product = productRepository.findById(productId);
         return product != null && product.getUserId().equals(userId);
