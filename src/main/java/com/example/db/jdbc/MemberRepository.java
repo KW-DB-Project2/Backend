@@ -91,6 +91,16 @@ public class MemberRepository {
         }
     }
 
+    public Optional<Account> findById(Long loginId){
+        String sql = "SELECT id, login_id, local_id, password, username, email, phone_number, role from account WHERE id = ?";
+        try {
+            Account account = template.queryForObject(sql, accountRowMapper(), loginId);
+            return Optional.of(account);
+        } catch (EmptyResultDataAccessException e){
+            return Optional.empty();
+        }
+    }
+
     public Optional<Account> findByLoginId(Long loginId){
         String sql = "SELECT id, login_id, local_id, password, username, email, phone_number, role from account WHERE login_id = ?";
         try {
@@ -121,24 +131,24 @@ public class MemberRepository {
         }
     }
 
-    public void updateRole(Long loginId, UserRole role){
-        String sql = "update account set role = ? where login_id = ?";
-        template.update(sql, role.name(), loginId);
+    public void updateRole(Long id, UserRole role){
+        String sql = "update account set role = ? where id = ?";
+        template.update(sql, role.name(), id);
     }
 
-    public void updatePhoneNumber(Long loginId, String phoneNumber){
-       String sql = "update account set phone_number = ? where login_id = ?";
-       template.update(sql, phoneNumber, loginId);
+    public void updatePhoneNumber(Long id, String phoneNumber){
+       String sql = "update account set phone_number = ? where id = ?";
+       template.update(sql, phoneNumber, id);
     }
 
-    public void updateUsername(Long loginId, String username){
-        String sql = "update account set username = ? where login_id = ?";
-        template.update(sql, username, loginId);
+    public void updateUsername(Long id, String username){
+        String sql = "update account set username = ? where id = ?";
+        template.update(sql, username, id);
     }
 
-    public void updateEmail(Long loginId, String email){
-        String sql = "update account set email = ? where login_id = ?";
-        template.update(sql, email, loginId);
+    public void updateEmail(Long id, String email){
+        String sql = "update account set email = ? where id = ?";
+        template.update(sql, email, id);
     }
 
     private RowMapper<Account> accountRowMapper(){

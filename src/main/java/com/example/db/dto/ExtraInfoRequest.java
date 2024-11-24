@@ -7,6 +7,6 @@ import lombok.Setter;
 @Setter
 public class ExtraInfoRequest {
 
-    private Long loginId;
+    private Long id;
     private String phoneNumber;
 }
