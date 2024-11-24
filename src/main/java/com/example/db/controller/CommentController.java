@@ -1,37 +1,45 @@
 package com.example.db.controller;
 
+import com.example.db.dto.CommentDTO;
 import com.example.db.entity.Comment;
 import com.example.db.service.CommentService;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/comments")
+@AllArgsConstructor
 public class CommentController {
 
-    @Autowired
-    private CommentService commentService;
+    private final CommentService commentService;
 
     @PostMapping
-    public void createComment(@RequestBody Comment comment) {
-        commentService.createComment(comment);
+    public CommentDTO createComment(@RequestBody CommentDTO commentdto) {
+        return commentService.createComment(commentdto);
     }
 
     @PutMapping
-    public void updateComment(@RequestBody Comment comment) {
-        try {
-            commentService.updateComment(comment);
-        }catch (RuntimeException e) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
-        }
+    public CommentDTO updateComment(@RequestBody CommentDTO commentDTO) {
+        return commentService.updateComment(commentDTO);
+    }
+    @GetMapping("/commentId")
+    public Long getCommentId(@RequestBody CommentDTO commentDTO){
+        return commentService.getCommentId(commentDTO);
     }
 
     @DeleteMapping("/{commentId}")
-    public void deleteComment(@PathVariable Long commentId, @RequestParam Long userId) {
+    public String deleteComment(@PathVariable Long commentId, Authentication authentication) {
         try {
-            commentService.deleteComment(commentId, userId);
+            Long id = (Long)authentication.getPrincipal();
+            commentService.deleteComment(commentId, id);
+            return "Successfully comment deleted";
         } catch (RuntimeException e){
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, e.getMessage());
         }
