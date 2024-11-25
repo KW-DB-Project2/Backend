@@ -1,8 +1,6 @@
 package com.example.db.entity;
 
-import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.Date;
 
@@ -15,6 +13,8 @@ public class Review {
     private String reviewTitle;
     private String reviewContent;
     private byte[] reviewImg;
+    private Long createId;
     private Date createTime;
+    private Long updateId;
     private Date updateTime;
 }
