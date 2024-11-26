@@ -1,14 +1,9 @@
-package com.example.db.entity;
+package com.example.db.dto;
 
-import lombok.*;
-
-import java.util.Date;
+import lombok.Data;
 
 @Data
-@Builder
-@AllArgsConstructor
-@NoArgsConstructor
-public class Product {
+public class ProductDTO {
     private Long productId;
     private Long userId;
     private String productTitle;
@@ -17,8 +12,4 @@ public class Product {
     private Long productPrice;
     private boolean productStatus;
     private byte[] productImg;
-    private Long createId;
-    private Date createTime;
-    private Long updateId;
-    private Date updateTime;
 }

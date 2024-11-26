@@ -1,5 +1,6 @@
 package com.example.db.controller;
 
+import com.example.db.dto.ProductDTO;
 import com.example.db.entity.Product;
 import com.example.db.service.ProductService;
 import lombok.AllArgsConstructor;
@@ -26,12 +27,8 @@ public class ProductController {
     }
 
     @PostMapping("/add")
-    public ResponseEntity<?> addProduct(@RequestBody Product product) {
-        product.setCreateTime(new Date());
-        product.setUpdateTime(new Date());
-        productService.addProduct(product);
-        product.setProductId(productService.getProductId(product).getFirst().getProductId());
-        return ResponseEntity.ok(product);
+    public ResponseEntity<?> addProduct(@RequestBody ProductDTO productDTO) {
+        return ResponseEntity.ok(productService.addProduct(productDTO));
     }
 
     @GetMapping
@@ -46,30 +43,11 @@ public class ProductController {
     }
 
     @PutMapping("/{productId}")
-    public ResponseEntity<?> updateProduct(@PathVariable Long productId, @RequestBody Product product, Authentication authentication) {
-        //productId에 userId 검증 추가
-        return ResponseEntity.ok(productService.updateProduct(product,productId));
-//        try{
-//            Long userId = (Long)authentication.getPrincipal();
-//            if(productService.isProductOwnedByUser(productId,userId)){
-//                return ResponseEntity.ok(productService.updateProduct(product));
-//            }
-//
-//        }catch(Exception e){
-//            log.error("product's userId is not match user's id");
-//        }
-        //return ResponseEntity.ok("update not complete");
+    public ResponseEntity<?> updateProduct(@PathVariable Long productId, @RequestBody ProductDTO productDTO, Authentication authentication) {
+        return ResponseEntity.ok(productService.updateProduct(productDTO,productId));
     }
     @DeleteMapping("/{productId}")
     public ResponseEntity<?> deleteProduct(@PathVariable Long productId,Authentication authentication){
-//        try{
-//            Long id = (Long)authentication.getPrincipal();
-//            if(productService.isProductOwnedByUser(productId,id)){
-//                productService.deleteProduct(productId);
-//            }
-//        }catch(Exception e){
-//            e.printStackTrace();
-//        }
         productService.deleteProduct(productId);
         return ResponseEntity.ok("delete complete successfully!");
     }
