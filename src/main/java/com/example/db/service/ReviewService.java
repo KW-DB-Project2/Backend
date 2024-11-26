@@ -21,6 +21,11 @@ public class ReviewService {
         reviewRepository.createReview(review);
     }
 
+    public List<Review> getReviewsByProductId(Long productId) {
+        return reviewRepository.findReviewsByProductId(productId);
+    }
+
+
     public void updateReview(Review review) {
         int rowsAffected = reviewRepository.updateReview(review);
         if(rowsAffected == 0){

@@ -41,6 +41,12 @@ public class ReviewRepository {
         return template.update(sql, reviewId, userId);
     }
 
+    public List<Review> findReviewsByProductId(Long productId) {
+        String sql = "SELECT * FROM review WHERE product_id = ?";
+        return template.query(sql, reviewRowMapper, productId);
+    }
+
+
     private RowMapper<Review> reviewRowMapper = (rs, rowNum) -> {
         Review review = new Review();
         review.setReviewId(rs.getLong("review_id"));
