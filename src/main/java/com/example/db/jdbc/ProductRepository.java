@@ -65,7 +65,8 @@ public class ProductRepository {
                 updateTime);
     }
 
-    public List<Product> update(Product product) {
+    public List<Product> update(Product product, Long productId) {
+        product.setProductId(productId);
         String sql = "UPDATE product SET user_id = ?, product_title = ?, product_content = ?, " +
                 "product_price = ?, product_status = ?, product_img = ? WHERE product_id = ?";
         jdbcTemplate.update(sql,

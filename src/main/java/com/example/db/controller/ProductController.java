@@ -47,7 +47,7 @@ public class ProductController {
     @PutMapping("/{productId}")
     public ResponseEntity<?> updateProduct(@PathVariable Long productId, @RequestBody Product product, Authentication authentication) {
         //productId에 userId 검증 추가
-        return ResponseEntity.ok(productService.updateProduct(product));
+        return ResponseEntity.ok(productService.updateProduct(product,productId));
 //        try{
 //            Long userId = (Long)authentication.getPrincipal();
 //            if(productService.isProductOwnedByUser(productId,userId)){
