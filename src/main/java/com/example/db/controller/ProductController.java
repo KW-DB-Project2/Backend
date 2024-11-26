@@ -61,9 +61,13 @@ public class ProductController {
     }
     @DeleteMapping("/{productId}")
     public ResponseEntity<?> deleteProduct(@PathVariable Long productId,Authentication authentication){
-        Long id = (Long)authentication.getPrincipal();
-        if(productService.isProductOwnedByUser(productId,id)){
-            productService.deleteProduct(productId);
+        try{
+            Long id = (Long)authentication.getPrincipal();
+            if(productService.isProductOwnedByUser(productId,id)){
+                productService.deleteProduct(productId);
+            }
+        }catch(Exception e){
+            e.printStackTrace();
         }
         return ResponseEntity.ok("delete complete successfully!");
     }
