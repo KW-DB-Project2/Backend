@@ -2,6 +2,7 @@ package com.example.db.controller;
 
 import com.example.db.entity.Product;
 import com.example.db.service.ProductService;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
