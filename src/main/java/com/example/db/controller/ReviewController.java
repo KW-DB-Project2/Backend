@@ -17,9 +17,15 @@ public class ReviewController {
     private ReviewService reviewService;
 
     @GetMapping("/search")
-    public List<Review> searchReviews(@RequestParam String keyword) {
+    public List<Review> searchReviews(@RequestParam(name = "keyword") String keyword) {
         return reviewService.searchReviews(keyword);
     }
+
+    @GetMapping("/product/{productId}")
+    public List<Review> getReviewsByProductId(@PathVariable("productId") Long productId) {
+        return reviewService.getReviewsByProductId(productId);
+    }
+
 
     @PostMapping
     public void createReview(@RequestBody Review review) {
@@ -36,7 +42,7 @@ public class ReviewController {
     }
 
     @DeleteMapping("/{reviewId}")
-    public void deleteReview(@PathVariable Long reviewId, @RequestParam Long userId) {
+    public void deleteReview(@PathVariable("reviewId") Long reviewId, @RequestParam("userId") Long userId) {
         try{
             reviewService.deleteReview(reviewId, userId);
         }catch (RuntimeException e){
