@@ -6,6 +6,8 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 
+import java.util.Collections;
+
 @Configuration
 public class CorsConfig {
 
@@ -17,6 +19,7 @@ public class CorsConfig {
         config.setAllowCredentials(true);
 //        config.addAllowedOrigin("http://localhost:5173");  // 프론트엔드 서버의 주소
 //        config.addAllowedOrigin("http://43.200.199.72:5173");  // 프론트엔드 서버의 주소
+        config.setAllowedOriginPatterns(Collections.singletonList("*")); // 모든 Origin 허용
         config.addAllowedOrigin("https://kwangwoon.shop");
         config.addAllowedOrigin("https://www.kwangwoon.shop");
         config.addAllowedHeader("*");
