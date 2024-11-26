@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @Slf4j
 @AllArgsConstructor
-@RequestMapping("report")
+@RequestMapping("/report")
 public class ReportController {
     private final ReportService reportService;
 
