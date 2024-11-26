@@ -4,6 +4,7 @@ import com.example.db.entity.Product;
 import com.example.db.jdbc.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
@@ -23,6 +24,7 @@ public class ProductService {
         return productRepository.findByProductTitleContainingIgnoreCase(query);
     }
 
+    @Transactional
     public int addProduct(Product product) {
         return productRepository.save(product);
     }
@@ -34,11 +36,12 @@ public class ProductService {
         return productRepository.findAllProducts();
     }
 
+    @Transactional
     public List<Product> updateProduct(Product product, Long productId){
         return productRepository.update(product,productId);
     }
 
-
+    @Transactional
     public boolean deleteProduct(Long productId) {
         int deleteRows = productRepository.deleteProduct(productId);
         return deleteRows > 0;
