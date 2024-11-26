@@ -34,8 +34,8 @@ public class ProductService {
         return productRepository.findAllProducts();
     }
 
-    public List<Product> updateProduct(Product product){
-        return productRepository.update(product);
+    public List<Product> updateProduct(Product product, Long productId){
+        return productRepository.update(product,productId);
     }
 
 
