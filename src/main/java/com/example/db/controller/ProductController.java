@@ -47,17 +47,17 @@ public class ProductController {
     @PutMapping("/{productId}")
     public ResponseEntity<?> updateProduct(@PathVariable Long productId, @RequestBody Product product, Authentication authentication) {
         //productId에 userId 검증 추가
-
-        try{
-            Long userId = (Long)authentication.getPrincipal();
-            if(productService.isProductOwnedByUser(productId,userId)){
-                return ResponseEntity.ok(productService.updateProduct(product));
-            }
-
-        }catch(Exception e){
-            log.error("product's userId is not match user's id");
-        }
-        return ResponseEntity.ok("update not complete");
+        return ResponseEntity.ok(productService.updateProduct(product));
+//        try{
+//            Long userId = (Long)authentication.getPrincipal();
+//            if(productService.isProductOwnedByUser(productId,userId)){
+//                return ResponseEntity.ok(productService.updateProduct(product));
+//            }
+//
+//        }catch(Exception e){
+//            log.error("product's userId is not match user's id");
+//        }
+        //return ResponseEntity.ok("update not complete");
     }
     @DeleteMapping("/{productId}")
     public ResponseEntity<?> deleteProduct(@PathVariable Long productId,Authentication authentication){
