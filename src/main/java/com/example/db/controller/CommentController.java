@@ -21,12 +21,13 @@ public class CommentController {
     private final CommentService commentService;
 
     @PostMapping
-    public CommentDTO createComment(@RequestBody CommentDTO commentdto) {
+    public Comment createComment(@RequestBody CommentDTO commentdto) {
         return commentService.createComment(commentdto);
     }
 
-    @PutMapping
-    public CommentDTO updateComment(@RequestBody CommentDTO commentDTO) {
+    @PutMapping("/{commentId}")
+    public Comment updateComment(@PathVariable Long commentId,@RequestBody CommentDTO commentDTO) {
+        commentDTO.setCommentId(commentId);
         return commentService.updateComment(commentDTO);
     }
     @GetMapping("/commentId")

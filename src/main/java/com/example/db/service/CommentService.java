@@ -31,7 +31,7 @@ public class CommentService {
         return commentRepository.getCommentId(comment);
     }
 
-    public CommentDTO createComment(CommentDTO commentdto) {
+    public Comment createComment(CommentDTO commentdto) {
         Comment comment = Comment.builder()
                 .commentId(commentdto.getCommentId())
                 .userId(commentdto.getUserId())
@@ -46,14 +46,14 @@ public class CommentService {
         return commentRepository.createComment(comment);
     }
 
-    public CommentDTO updateComment(CommentDTO commentDTO) {
+    public Comment updateComment(CommentDTO commentDTO) {
         Comment comment = Comment.builder()
                 .commentId(commentDTO.getCommentId())
                 .userId(commentDTO.getUserId())
                 .productId(commentDTO.getProductId())
                 .reviewId(commentDTO.getReviewId())
                 .commentContent(commentDTO.getCommentContent())
-                .createId(null)
+                .createId(commentDTO.getUserId())
                 .updateId(commentDTO.getUserId())
                 .createTime(null)
                 .updateTime(new Date())

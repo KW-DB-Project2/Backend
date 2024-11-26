@@ -33,7 +33,7 @@ public class CommentRepository {
         return includedIdComment.getCommentId();
     }
 
-    public CommentDTO createComment(Comment comment) {
+    public Comment createComment(Comment comment) {
         final String sql = "INSERT INTO comment (user_id, product_id, review_id, comment_content, create_id, create_time, update_id,update_time) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();//자동 생성된 key 얻기 위한 변수
         Timestamp createTime = new Timestamp(comment.getCreateTime().getTime());
@@ -44,9 +44,9 @@ public class CommentRepository {
             ps.setLong(2, comment.getProductId());
             ps.setLong(3, comment.getReviewId());
             ps.setString(4, comment.getCommentContent());
-            ps.setLong(5, comment.getCreateId());
+            ps.setLong(5, comment.getUserId());
             ps.setTimestamp(6, createTime);
-            ps.setLong(7, comment.getUpdateId());
+            ps.setLong(7, comment.getUserId());
             ps.setTimestamp(8, updateTime);
             return ps;
             }, keyHolder);
@@ -55,30 +55,30 @@ public class CommentRepository {
         String selectSql = "SELECT * FROM comment WHERE comment_id = ?";
         Comment createdComment = template.queryForObject(selectSql, new BeanPropertyRowMapper<>(Comment.class), generatedCommentId);
 
-        CommentDTO commentDTO = CommentDTO.builder()
-                .commentId(createdComment.getCommentId())
-                .userId(createdComment.getUserId())
-                .productId(createdComment.getProductId())
-                .reviewId(createdComment.getReviewId())
-                .commentContent(createdComment.getCommentContent())
-                .build();
-        return commentDTO;
+//        CommentDTO commentDTO = CommentDTO.builder()
+//                .commentId(createdComment.getCommentId())
+//                .userId(createdComment.getUserId())
+//                .productId(createdComment.getProductId())
+//                .reviewId(createdComment.getReviewId())
+//                .commentContent(createdComment.getCommentContent())
+//                .build();
+        return createdComment;
     }
 
-    public CommentDTO updateComment(Comment comment) {
+    public Comment updateComment(Comment comment) {
         try{
             String sql = "UPDATE comment SET comment_content = ?, update_time = ?, update_id=? WHERE user_id = ? AND product_id =?";
             template.update(sql, comment.getCommentContent(), comment.getUpdateTime(),comment.getUpdateId(),comment.getUserId(),comment.getProductId());
             sql = "SELECT * from comment where product_id = ? AND review_id=?";
             Comment updatedComment = template.queryForObject(sql, new BeanPropertyRowMapper<>(Comment.class), comment.getProductId(),comment.getReviewId());
-            CommentDTO commentDTO = CommentDTO.builder()
-                    .commentId(updatedComment.getCommentId())
-                    .userId(updatedComment.getUserId())
-                    .productId(updatedComment.getProductId())
-                    .reviewId(updatedComment.getReviewId())
-                    .commentContent(updatedComment.getCommentContent())
-                    .build();
-            return commentDTO;
+//            CommentDTO commentDTO = CommentDTO.builder()
+//                    .commentId(updatedComment.getCommentId())
+//                    .userId(updatedComment.getUserId())
+//                    .productId(updatedComment.getProductId())
+//                    .reviewId(updatedComment.getReviewId())
+//                    .commentContent(updatedComment.getCommentContent())
+//                    .build();
+            return updatedComment;
         }catch (DataAccessException e) {
             log.error("Database error: {}", e.getMessage(), e);
             throw new RuntimeException("데이터베이스 처리 중 오류가 발생했습니다.");
