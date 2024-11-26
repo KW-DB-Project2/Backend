@@ -2,6 +2,7 @@ package com.example.db.service;
 
 import com.example.db.entity.Product;
 import com.example.db.jdbc.ProductRepository;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
