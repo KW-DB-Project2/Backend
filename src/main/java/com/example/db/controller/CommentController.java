@@ -35,14 +35,5 @@ public class CommentController {
         return commentService.getCommentId(commentDTO);
     }
 
-    @DeleteMapping("/{commentId}")
-    public String deleteComment(@PathVariable("commentId") Long commentId, Authentication authentication) {
-        try {
-            Long id = (Long)authentication.getPrincipal();
-            commentService.deleteComment(commentId, id);
-            return "Successfully comment deleted";
-        } catch (RuntimeException e){
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN, e.getMessage());
-        }
-    }
+ 
 }

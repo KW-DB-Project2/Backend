@@ -1,5 +1,6 @@
 package com.example.db.service;
 
+import com.example.db.dto.ProductDTO;
 import com.example.db.entity.Product;
 import com.example.db.jdbc.ProductRepository;
 import lombok.AllArgsConstructor;
@@ -9,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -26,7 +28,20 @@ public class ProductService {
     }
 
     @Transactional
-    public int addProduct(Product product) {
+    public Product addProduct(ProductDTO productDTO) {
+        Product product = Product.builder()
+                .userId(productDTO.getUserId())
+                .productTitle(productDTO.getProductTitle())
+                //.productClass(productDTO.getProductClass())
+                .productContent(productDTO.getProductContent())
+                .productPrice(productDTO.getProductPrice())
+                .productStatus(productDTO.isProductStatus())
+                .productImg(productDTO.getProductImg())
+                .createId(productDTO.getUserId())
+                .createTime(new Date())
+                .updateId(productDTO.getUserId())
+                .updateTime(new Date())
+                .build();
         return productRepository.save(product);
     }
     public List<Product> getProductId(Product product){
@@ -38,8 +53,21 @@ public class ProductService {
     }
 
     @Transactional
-    public List<Product> updateProduct(Product product, Long productId){
-        return productRepository.update(product,productId);
+    public Product updateProduct(ProductDTO productDTO, Long productId){
+        Product product = Product.builder()
+                .productId(productId)
+                .userId(productDTO.getUserId())
+                .productTitle(productDTO.getProductTitle())
+                .productContent(productDTO.getProductContent())
+                .productPrice(productDTO.getProductPrice())
+                .productStatus(productDTO.isProductStatus())
+                .productImg(productDTO.getProductImg())
+                .createId(productDTO.getUserId())
+                .createTime(new Date())
+                .updateId(productDTO.getUserId())
+                .updateTime(new Date())
+                .build();
+        return productRepository.update(product);
     }
 
     @Transactional

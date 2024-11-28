@@ -5,8 +5,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
+import java.sql.PreparedStatement;
 import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
@@ -46,29 +49,35 @@ public class ProductRepository {
         return jdbcTemplate.query(sql,new BeanPropertyRowMapper<>(Product.class),product.getProductTitle());
     }
 
-    public int save(Product product) {
-        String sql = "INSERT INTO product (user_id, product_title, product_class, product_content, product_price, product_status, product_img,create_id,create_time,update_id,update_time) " +
-                "VALUES (?, ?, ?, ?, ?, ?, ?,?,?,?,?)";
-        Date createTime = new Date(product.getCreateTime().getTime());  // getTime()으로 밀리초를 얻어 java.sql.Date로 변환
-        Date updateTime = new Date(product.getUpdateTime().getTime());
-        return jdbcTemplate.update(sql,
-                product.getUserId(),
-                product.getProductTitle(),
-                product.getProductClass(),
-                product.getProductContent(),
-                product.getProductPrice(),
-                product.isProductStatus(),
-                product.getProductImg(),
-                product.getCreateId(),
-                createTime,
-                product.getUpdateId(),
-                updateTime);
+    public Product save(Product product) {
+        final String sql = "INSERT INTO product (user_id, product_title, product_content, product_price, product_status, product_img,create_id,create_time,update_id,update_time) " +
+                "VALUES (?, ?, ?, ?, ?, ?,?,?,?,?)";
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        Timestamp createTime = new Timestamp(product.getCreateTime().getTime());  // getTime()으로 밀리초를 얻어 java.sql.Date로 변환
+        Timestamp updateTime = new Timestamp(product.getUpdateTime().getTime());
+        jdbcTemplate.update(con->{
+            PreparedStatement ps = con.prepareStatement(sql, new String[]{"product_id"});
+            ps.setLong(1,product.getUserId());
+            ps.setString(2, product.getProductTitle());
+            ps.setString(3, product.getProductContent());
+            ps.setLong(4, product.getProductPrice());
+            ps.setBoolean(5, product.isProductStatus());
+            ps.setBytes(6, product.getProductImg());
+            ps.setLong(7,product.getUserId());
+            ps.setTimestamp(8, createTime);
+            ps.setLong(9,product.getUserId());
+            ps.setTimestamp(10, updateTime);
+            return ps;
+        },keyHolder);
+
+        Long generatedProductId = keyHolder.getKey().longValue();
+        String selectSql = "select * from product where product_id = ?";
+        return jdbcTemplate.queryForObject(selectSql, new BeanPropertyRowMapper<>(Product.class),generatedProductId);
     }
 
-    public List<Product> update(Product product, Long productId) {
-        product.setProductId(productId);
+    public Product update(Product product) {
         String sql = "UPDATE product SET user_id = ?, product_title = ?, product_content = ?, " +
-                "product_price = ?, product_status = ?, product_img = ? WHERE product_id = ?";
+                "product_price = ?, product_status = ?, product_img = ?, update_id =?, update_time = ? WHERE product_id = ?";
         jdbcTemplate.update(sql,
                 product.getUserId(),
                 product.getProductTitle(),
@@ -76,9 +85,11 @@ public class ProductRepository {
                 product.getProductPrice(),
                 product.isProductStatus(),
                 product.getProductImg(),
+                product.getUpdateId(),
+                product.getUpdateTime(),
                 product.getProductId());
-        String returnsql = "select * from product where product_id =?";
-        return jdbcTemplate.query(returnsql,new BeanPropertyRowMapper<>(Product.class),product.getProductId());
+        String returnSql = "select * from product where product_id =?";
+        return jdbcTemplate.queryForObject(returnSql,new BeanPropertyRowMapper<>(Product.class), product.getProductId());
     }
 
     public int deleteProduct(Long productId){
