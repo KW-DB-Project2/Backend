@@ -79,133 +79,7 @@ public class KakaoAuthService {
         return kakaoTokenDto.getAccess_token();
     }
 
-
-    /*
-    public ResponseEntity<LoginResponseDTO> kakaoLogin(String kakaoAccessToken) {
-
-        HttpHeaders headers = new HttpHeaders();
-        LoginResponseDTO loginResponseDto = new LoginResponseDTO();
-        Account account;
-
-        try {
-            account = getKakaoInfo(kakaoAccessToken);
-            if (account == null) {
-                throw new IllegalArgumentException("Failed to fetch account information from Kakao");
-            }
-        } catch (Exception e) {
-            loginResponseDto.setLoginSuccess(false);
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(loginResponseDto);
-        }
-
-
-        try {
-            Account existOwner = memberRepository.findByKakaoId(account.getLoginId()).orElse(null);
-            //Account existOwner = accountRepo.findById(account.getId()).orElse(null);
-            if (existOwner == null) {
-                memberRepository.save(account);
-            } else {
-                account = existOwner;
-            }
-
-            String jwt = jwtUtil.generateToken(account.getLoginId(), account.getEmail(), account.getUsername());
-            String refreshJwt = jwtUtil.generateRefreshToken(account.getLoginId());
-            saveRefreshToken(account.getLoginId(), refreshJwt);
-            headers.add("Authorization", "Bearer " + jwt);
-
-            loginResponseDto.setLoginSuccess(true);
-            loginResponseDto.setAccount(account);
-            loginResponseDto.setJwtToken(jwt);
-            loginResponseDto.setRefreshToken(refreshJwt);
-
-            // 응답에 Authorization 헤더를 포함
-            return ResponseEntity.ok().headers(headers).body(loginResponseDto);
-        } catch (Exception e) {
-            loginResponseDto.setLoginSuccess(false);
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(loginResponseDto);
-        }
-    }
-
-     */
-
-
-    /*
-    public ResponseEntity<LoginResponseDTO> kakaoLogin(String kakaoAccessToken) {
-
-        HttpHeaders headers = new HttpHeaders();
-        LoginResponseDTO loginResponseDto = new LoginResponseDTO();
-        Account account;
-
-        try {
-            // 카카오 사용자 정보 가져오기
-            account = getKakaoInfo(kakaoAccessToken);
-            if (account == null) {
-                throw new IllegalArgumentException("Failed to fetch account information from Kakao");
-            }
-        } catch (Exception e) {
-            loginResponseDto.setLoginSuccess(false);
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(loginResponseDto);
-        }
-
-        try {
-            // 이미 존재하는 사용자 확인
-            Account existOwner = memberRepository.findByKakaoId(account.getLoginId()).orElse(null);
-            if (existOwner == null) {
-                // 사용자 없으면 새로 저장
-                memberRepository.save(account);
-            } else {
-                // 사용자 있으면 기존 사용자 정보 사용
-                account = existOwner;
-            }
-
-            // 토큰 생성
-            String jwt = jwtUtil.generateToken(account.getLoginId(), account.getEmail(), account.getUsername());
-            String refreshJwt = jwtUtil.generateRefreshToken(account.getLoginId());
-
-            // 기존에 존재하는 refreshToken이 있으면 업데이트, 없으면 새로 저장
-
-            //RefreshToken existingToken = refreshTokenRepository.findByUserId(account.getLoginId());
-            //if (existingToken != null) {
-                // 기존 토큰이 있으면 업데이트
-            //    existingToken.setToken(refreshJwt);
-            //    existingToken.setExpiryDate(new Date(System.currentTimeMillis() + jwtUtil.getRefreshExpirationInMs()));
-            //    refreshTokenRepository.update(existingToken);
-            //} else {
-                // 기존 토큰이 없으면 새로 저장
-            //    saveRefreshToken(account.getLoginId(), refreshJwt);
-            //}
-
-
-            Optional<RefreshToken> existingTokenOptional = refreshTokenRepository.findByUserId(account.getLoginId());
-
-            if (existingTokenOptional.isPresent()) {
-                // Optional에서 실제 RefreshToken을 가져옴
-                RefreshToken existingToken = existingTokenOptional.get();
-                // 여기에 기존 토큰 처리 로직을 추가할 수 있습니다.
-                System.out.println("Existing token: " + existingToken.getToken());
-            } else {
-                // Optional이 비어 있는 경우
-                System.out.println("No existing token found for this user.");
-            }
-
-            headers.add("Authorization", "Bearer " + jwt);
-
-            loginResponseDto.setLoginSuccess(true);
-            loginResponseDto.setAccount(account);
-            loginResponseDto.setJwtToken(jwt);
-            loginResponseDto.setRefreshToken(refreshJwt);
-
-            // 응답에 Authorization 헤더를 포함
-            return ResponseEntity.ok().headers(headers).body(loginResponseDto);
-        } catch (Exception e) {
-            loginResponseDto.setLoginSuccess(false);
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(loginResponseDto);
-        }
-    }
-    */
+    @Transactional
     public ResponseEntity<LoginResponseDTO> kakaoLogin(String kakaoAccessToken) {
 
         HttpHeaders headers = new HttpHeaders();
@@ -287,20 +161,7 @@ public class KakaoAuthService {
         }
     }
 
-    /*
-    public void updateKakaoExtraInfo(ExtraInfoRequest extraInfoRequest){
-        Optional<Account> byKakaoId = memberRepository.findByKakaoId(extraInfoRequest.getLoginId());
-
-        if(byKakaoId.isPresent()){
-            Account account = byKakaoId.get();
-            account.setPhoneNumber(extraInfoRequest.getPhoneNumber());
-            memberRepository.updatePhoneNumber(account.getLoginId(), account.getPhoneNumber());
-        }else{
-            throw new IllegalArgumentException("User not found");
-        }
-    }
-    */
-
+    @Transactional
     public void updateKakaoExtraInfo(ExtraInfoRequest extraInfoRequest) {
         try {
             memberRepository.updatePhoneNumber(extraInfoRequest.getId(), extraInfoRequest.getPhoneNumber());
@@ -309,10 +170,6 @@ public class KakaoAuthService {
             throw new RuntimeException("Failed to update Kakao Extra Info");
         }
     }
-
-
-
-
 
 
     private void saveRefreshToken(Long loginId, String refreshToken) {

@@ -33,6 +33,7 @@ public class CommentService {
                 .build();
         return commentRepository.getCommentId(comment);
     }
+
     @Transactional
     public Comment createComment(CommentDTO commentdto) {
         Comment comment = Comment.builder()
@@ -56,6 +57,7 @@ public class CommentService {
         return returnComment;
     }
 
+    @Transactional
     public Comment updateComment(CommentDTO commentDTO) {
         Comment comment = Comment.builder()
                 .commentId(commentDTO.getCommentId())

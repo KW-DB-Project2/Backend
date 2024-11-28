@@ -26,7 +26,7 @@ public class CommentController {
     }
 
     @PutMapping("/{commentId}")
-    public Comment updateComment(@PathVariable Long commentId,@RequestBody CommentDTO commentDTO) {
+    public Comment updateComment(@PathVariable("commentId") Long commentId,@RequestBody CommentDTO commentDTO) {
         commentDTO.setCommentId(commentId);
         return commentService.updateComment(commentDTO);
     }
@@ -35,16 +35,5 @@ public class CommentController {
         return commentService.getCommentId(commentDTO);
     }
 
-    @DeleteMapping("/{commentId}")
-    public String deleteComment(@PathVariable Long commentId, Authentication authentication) {
-//        try {
-//            Long id = (Long)authentication.getPrincipal();
-//            commentService.deleteComment(commentId, id);
-//            return "Successfully comment deleted";
-//        } catch (RuntimeException e){
-//            throw new ResponseStatusException(HttpStatus.FORBIDDEN, e.getMessage());
-//        }
-        commentService.deleteComment(commentId);
-        return "Successfully comment deleted";
-    }
+ 
 }

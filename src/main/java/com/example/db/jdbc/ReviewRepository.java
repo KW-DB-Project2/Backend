@@ -17,6 +17,11 @@ public class ReviewRepository {
         this.template = new JdbcTemplate(dataSource);
     }
 
+    public List<Review> getAllReviews(){
+        String sql = "SELECT * FROM review";
+        return template.query(sql, reviewRowMapper);
+    }
+
     public List<Review> searchReview(String keyword){
         //String sql = "SELECT * FROM review WHERE review_title LIKE ? OR review_content LIKE ?";
         //return template.query(sql, reviewRowMapper, "%" + keyword + "%", "%" + keyword + "%");
@@ -39,6 +44,10 @@ public class ReviewRepository {
     public int deleteReview(Long reviewId, Long userId) {
         String sql = "DELETE FROM review WHERE review_id = ? AND user_id = ?";
         return template.update(sql, reviewId, userId);
+    }
+    public int deleteReview(Long reviewId) {
+        String sql = "DELETE FROM review WHERE review_id = ?";
+        return template.update(sql, reviewId);
     }
 
     public List<Review> findReviewsByProductId(Long productId) {

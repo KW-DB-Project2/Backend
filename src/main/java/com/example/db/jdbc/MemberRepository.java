@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
 import java.sql.PreparedStatement;
+import java.util.List;
 import java.util.Optional;
 import java.util.Random;
 
@@ -149,6 +150,11 @@ public class MemberRepository {
     public void updateEmail(Long id, String email){
         String sql = "update account set email = ? where id = ?";
         template.update(sql, email, id);
+    }
+
+    public List<Account> findAllAccount(){
+        String sql = "SELECT * FROM account";
+        return template.query(sql, accountRowMapper());
     }
 
     private RowMapper<Account> accountRowMapper(){
