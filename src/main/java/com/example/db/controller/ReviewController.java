@@ -27,6 +27,11 @@ public class ReviewController {
         return reviewService.getReviewsByProductId(productId);
     }
 
+    @GetMapping("/{reviewId}")
+    public Review getDetailReview(@PathVariable("reviewId") Long reviewId) {
+        return reviewService.getReviewByReviewId(reviewId);
+    }
+
 
     @PostMapping
     public void createReview(@RequestBody Review review) {
