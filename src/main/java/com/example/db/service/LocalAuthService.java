@@ -8,11 +8,13 @@ import com.example.db.jdbc.MemberRepository;
 import com.example.db.jdbc.RefreshTokenRepository;
 import com.example.db.jwt.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
+import java.util.List;
 
 @Service
 public class LocalAuthService {
@@ -26,13 +28,18 @@ public class LocalAuthService {
     @Autowired
     private RefreshTokenRepository refreshTokenRepository;
 
+    @Value("#{'${admin.emails}'.split(',')}")
+    private List<String> adminEmails;
+
 
     @Transactional
     public Account register(String localId, String rawPassword, String username, String email, String phoneNumber){
         Long loginId = memberRepository.generateRandomLoginId(8);
         String encodePassword = passwordEncoder.encode(rawPassword);
 
-        Account account = new Account(loginId, localId, encodePassword, username, email,phoneNumber, UserRole.USER);
+        UserRole role = adminEmails.contains(email) ? UserRole.ADMIN : UserRole.USER;
+
+        Account account = new Account(loginId, localId, encodePassword, username, email,phoneNumber, role);
         return memberRepository.save(account);
     }
 
@@ -42,6 +49,11 @@ public class LocalAuthService {
         Account account = memberRepository.findByLocalId(localId)
                 .filter(acc -> passwordEncoder.matches(rawPassword, acc.getPassword()))
                 .orElseThrow(() -> new IllegalArgumentException("Invalid id or password"));
+
+        if (adminEmails.contains(account.getEmail()) && !account.getRole().equals(UserRole.ADMIN)) {
+            account.setRole(UserRole.ADMIN);
+            memberRepository.updateRole(account.getId(), UserRole.ADMIN);
+        }
 
         String jwtToken = jwtUtil.generateToken(account.getId(), account.getEmail(), account.getUsername());
         String refreshToken = jwtUtil.generateRefreshToken(account.getId());

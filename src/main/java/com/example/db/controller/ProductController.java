@@ -36,6 +36,11 @@ public class ProductController {
         return ResponseEntity.ok(productService.getProducts());
     }
 
+    @GetMapping("/mypage")
+    public ResponseEntity<List<Product>> getMyPageProducts() {
+        return ResponseEntity.ok(productService.getAllProductsForMyPage());
+    }
+
     @GetMapping("/search")
     public ResponseEntity<List<Product>> searchProducts(@RequestParam("query") String query) {
         List<Product> searchResults = productService.searchProducts(query);

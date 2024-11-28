@@ -35,6 +35,11 @@ public class ProductRepository {
         return jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(Product.class));
     }
 
+    public List<Product> findAllProductsWithoutStatus() {
+        String sql = "SELECT * FROM product";
+        return jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(Product.class));
+    }
+
     public Product findById(Long productId){
         String sql = "SELECT * FROM product WHERE PRODUCT_ID = ?";
         try{

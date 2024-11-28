@@ -52,6 +52,10 @@ public class ProductService {
         return productRepository.findAllProducts();
     }
 
+    public List<Product> getAllProductsForMyPage() {
+        return productRepository.findAllProductsWithoutStatus();
+    }
+
     @Transactional
     public Product updateProduct(ProductDTO productDTO, Long productId){
         Product product = Product.builder()
