@@ -26,7 +26,7 @@ public class CommentController {
     }
 
     @PutMapping("/{commentId}")
-    public Comment updateComment(@PathVariable Long commentId,@RequestBody CommentDTO commentDTO) {
+    public Comment updateComment(@PathVariable("commentId") Long commentId,@RequestBody CommentDTO commentDTO) {
         commentDTO.setCommentId(commentId);
         return commentService.updateComment(commentDTO);
     }
@@ -36,7 +36,7 @@ public class CommentController {
     }
 
     @DeleteMapping("/{commentId}")
-    public String deleteComment(@PathVariable Long commentId, Authentication authentication) {
+    public String deleteComment(@PathVariable("commentId") Long commentId, Authentication authentication) {
         try {
             Long id = (Long)authentication.getPrincipal();
             commentService.deleteComment(commentId, id);

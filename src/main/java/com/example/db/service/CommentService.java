@@ -6,6 +6,7 @@ import com.example.db.jdbc.CommentRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.List;
@@ -31,6 +32,7 @@ public class CommentService {
         return commentRepository.getCommentId(comment);
     }
 
+    @Transactional
     public Comment createComment(CommentDTO commentdto) {
         Comment comment = Comment.builder()
                 .commentId(commentdto.getCommentId())
@@ -46,6 +48,7 @@ public class CommentService {
         return commentRepository.createComment(comment);
     }
 
+    @Transactional
     public Comment updateComment(CommentDTO commentDTO) {
         Comment comment = Comment.builder()
                 .commentId(commentDTO.getCommentId())

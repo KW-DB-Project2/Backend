@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
+import java.util.List;
 
 @Service
 @AllArgsConstructor
@@ -42,6 +43,14 @@ public class ReportService {
                 .updateTime(new Date())
                 .build();
         return reportRepository.createReviewReport(reviewReport);
+    }
+
+    public List<ProductReport> getAllProductReport(){
+        return reportRepository.getAllProductReport();
+    }
+
+    public List<ReviewReport> getAllReviewReport(){
+        return reportRepository.getAllReviewReport();
     }
 
 }

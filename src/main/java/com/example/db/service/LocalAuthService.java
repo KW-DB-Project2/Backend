@@ -10,6 +10,7 @@ import com.example.db.jwt.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 
@@ -26,6 +27,7 @@ public class LocalAuthService {
     private RefreshTokenRepository refreshTokenRepository;
 
 
+    @Transactional
     public Account register(String localId, String rawPassword, String username, String email, String phoneNumber){
         Long loginId = memberRepository.generateRandomLoginId(8);
         String encodePassword = passwordEncoder.encode(rawPassword);
@@ -34,6 +36,7 @@ public class LocalAuthService {
         return memberRepository.save(account);
     }
 
+    @Transactional
     public LoginResponseDTO login(String localId, String rawPassword){
 
         Account account = memberRepository.findByLocalId(localId)

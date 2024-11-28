@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.PreparedStatement;
 import java.sql.Timestamp;
+import java.util.List;
 
 @Repository
 @AllArgsConstructor
@@ -63,5 +64,15 @@ public class ReportRepository {
         Long generatedReviewReportId = keyHolder.getKey().longValue();
         String selectSql = "select * from review_report where review_report_id = ?";
         return jdbcTemplate.queryForObject(selectSql,new BeanPropertyRowMapper<>(ReviewReport.class),generatedReviewReportId);
+    }
+
+    public List<ProductReport> getAllProductReport(){
+        String sql = "SELECT * FROM product_report";
+        return jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(ProductReport.class));
+    }
+
+    public List<ReviewReport> getAllReviewReport(){
+        String sql = "SELECT * FROM review_report";
+        return jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(ReviewReport.class));
     }
 }
