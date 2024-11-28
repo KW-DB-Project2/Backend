@@ -28,6 +28,10 @@ public class ReviewService {
         return reviewRepository.findReviewsWithUsernameByProductId(productId);
     }
 
+    public Review getReviewByReviewId(Long reviewId) {
+        return reviewRepository.findReviewWithReviewId(reviewId);
+    }
+
     @Transactional
     public void updateReview(Review review) {
         int rowsAffected = reviewRepository.updateReview(review);

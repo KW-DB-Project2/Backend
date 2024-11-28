@@ -80,6 +80,11 @@ public class ReviewRepository {
         return template.query(sql, reviewRowMapper, productId);
     }
 
+    public Review findReviewWithReviewId(Long reviewId){
+        String sql = "SELECT * FROM review WHERE review_id = ?";
+        return template.queryForObject(sql, reviewRowMapper, reviewId);
+    }
+
     public List<ReviewDTO> findReviewsWithUsernameByProductId(Long productId) {
         String sql = "SELECT r.review_id, r.user_id, r.product_id, r.review_title, " +
                 "r.review_content, r.create_id, r.create_time, r.update_id, r.update_time, c.username " +
