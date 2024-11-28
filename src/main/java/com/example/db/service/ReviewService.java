@@ -1,5 +1,6 @@
 package com.example.db.service;
 
+import com.example.db.dto.ReviewDTO;
 import com.example.db.entity.Review;
 import com.example.db.jdbc.ReviewRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +15,7 @@ public class ReviewService {
     @Autowired
     private ReviewRepository reviewRepository;
 
-    public List<Review> searchReviews(String keyword){
+    public List<ReviewDTO> searchReviews(String keyword){
         return reviewRepository.searchReview(keyword);
     }
 
@@ -23,8 +24,8 @@ public class ReviewService {
         reviewRepository.createReview(review);
     }
 
-    public List<Review> getReviewsByProductId(Long productId) {
-        return reviewRepository.findReviewsByProductId(productId);
+    public List<ReviewDTO> getReviewsByProductId(Long productId) {
+        return reviewRepository.findReviewsWithUsernameByProductId(productId);
     }
 
     @Transactional

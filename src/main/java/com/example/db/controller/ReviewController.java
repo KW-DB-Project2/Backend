@@ -1,5 +1,6 @@
 package com.example.db.controller;
 
+import com.example.db.dto.ReviewDTO;
 import com.example.db.entity.Review;
 import com.example.db.service.ReviewService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,12 +18,12 @@ public class ReviewController {
     private ReviewService reviewService;
 
     @GetMapping("/search")
-    public List<Review> searchReviews(@RequestParam(name = "keyword") String keyword) {
+    public List<ReviewDTO> searchReviews(@RequestParam(name = "keyword") String keyword) {
         return reviewService.searchReviews(keyword);
     }
 
     @GetMapping("/product/{productId}")
-    public List<Review> getReviewsByProductId(@PathVariable("productId") Long productId) {
+    public List<ReviewDTO> getReviewsByProductId(@PathVariable("productId") Long productId) {
         return reviewService.getReviewsByProductId(productId);
     }
 

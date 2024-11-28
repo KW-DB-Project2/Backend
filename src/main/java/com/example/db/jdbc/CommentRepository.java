@@ -85,9 +85,9 @@ public class CommentRepository {
         }
     }
 
-    public int deleteComment(Long commentId) {
-        String sql = "DELETE FROM comment WHERE comment_id = ?";
-        return template.update(sql, commentId);
+    public int deleteComment(Long commentId, Long id) {
+        String sql = "DELETE FROM comment WHERE comment_id = ? AND user_id = ?";
+        return template.update(sql, commentId, id);
     }
 
     private RowMapper<Comment> commentRowMapper = (rs, rowNum) -> {

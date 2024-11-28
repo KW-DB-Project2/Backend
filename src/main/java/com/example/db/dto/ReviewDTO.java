@@ -1,20 +1,21 @@
-package com.example.db.entity;
+package com.example.db.dto;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
 
 import java.util.Date;
 
 @Data
 @Builder
 @AllArgsConstructor
-@NoArgsConstructor
-public class Review {
-
+public class ReviewDTO {
     private Long reviewId;
     private Long userId;
     private Long productId;
     private String reviewTitle;
     private String reviewContent;
+    private String username;  // 추가된 필드
     private Long createId;
     private Date createTime;
     private Long updateId;
