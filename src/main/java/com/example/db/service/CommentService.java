@@ -80,14 +80,8 @@ public class CommentService {
         return returnComment;
     }
 
-    public void deleteComment(Long commentId) {
-        int rowsAffected = -1;
-        try{
-            rowsAffected = commentRepository.deleteComment(commentId);
-        }catch (Exception e){
-            log.error("delete comment is failed");
-            e.printStackTrace();
-        }
+    public void deleteComment(Long commentId, Long id) {
+        int rowsAffected = commentRepository.deleteComment(commentId, id);
         if (rowsAffected == 0) {
             throw new RuntimeException("comment delete error! -> affectedRow is zero");
         }
