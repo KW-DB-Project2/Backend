@@ -1,6 +1,7 @@
 package com.example.db.service;
 
 import com.example.db.dto.CommentDTO;
+import com.example.db.dto.CommentDTOWithUsername;
 import com.example.db.entity.Comment;
 import com.example.db.jdbc.CommentRepository;
 import lombok.AllArgsConstructor;
@@ -8,6 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.Date;
 import java.util.List;
@@ -78,6 +80,14 @@ public class CommentService {
             e.printStackTrace();
         }
         return returnComment;
+    }
+
+    public List<CommentDTOWithUsername> getAllComments(Long reviewId){
+        return commentRepository.getAllCommentsWithReviewId(reviewId);
+    }
+
+    public CommentDTOWithUsername getCommentById(Long commentId) {
+        return commentRepository.getCommentWithUsername(commentId);
     }
 
     public void deleteComment(Long commentId, Long id) {

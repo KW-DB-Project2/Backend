@@ -1,6 +1,7 @@
 package com.example.db.service;
 
 import com.example.db.dto.AskDTO;
+import com.example.db.dto.AskDTOWithUsername;
 import com.example.db.entity.Ask;
 import com.example.db.jdbc.AskRepository;
 import lombok.AllArgsConstructor;
@@ -13,8 +14,12 @@ import java.util.List;
 public class AskService {
     private final AskRepository askRepository;
 
-    public List<Ask> getAllAsk(Long productId){
-       return askRepository.getAllAsk(productId);
+    public List<AskDTOWithUsername> getAllAsk(Long productId){
+       return askRepository.getAllAskWithName(productId);
+    }
+
+    public AskDTOWithUsername getAsk(Long askId){
+        return askRepository.getAskById(askId);
     }
 
 

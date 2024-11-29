@@ -1,6 +1,7 @@
 package com.example.db.jdbc;
 
 import com.example.db.dto.CommentDTO;
+import com.example.db.dto.CommentDTOWithUsername;
 import com.example.db.entity.Comment;
 import com.example.db.entity.Product;
 import lombok.extern.slf4j.Slf4j;
@@ -31,6 +32,24 @@ public class CommentRepository {
         final String sql = "select comment_id from comment where product_id =? AND review_id = ? AND user_id = ?";
         Comment includedIdComment = template.queryForObject(sql, new BeanPropertyRowMapper<>(Comment.class), comment.getProductId(),comment.getReviewId(),comment.getUserId());
         return includedIdComment.getCommentId();
+    }
+
+    public List<CommentDTOWithUsername> getAllCommentsWithReviewId(Long reviewId){
+        String sql = "SELECT c.comment_id, c.user_id, c.product_id, c.review_id, a.username, c.comment_content, " +
+                "c.create_id, c.create_time, c.update_id, c.update_time " +
+                "FROM comment c " +
+                "JOIN account a ON a.id = c.user_id " +
+                "WHERE c.review_id = ?";
+        return template.query(sql, new BeanPropertyRowMapper<>(CommentDTOWithUsername.class), reviewId);
+    }
+
+    public CommentDTOWithUsername getCommentWithUsername(Long commentId){
+        String sql = "SELECT c.comment_id, c.user_id, c.product_id, c.review_id, a.username, c.comment_content, " +
+                "c.create_id, c.create_time, c.update_id, c.update_time " +
+                "FROM comment c " +
+                "JOIN account a ON a.id = c.user_id " +
+                "WHERE c.comment_id = ?";
+        return template.queryForObject(sql, new BeanPropertyRowMapper<>(CommentDTOWithUsername.class), commentId);
     }
 
     public Comment createComment(Comment comment) {

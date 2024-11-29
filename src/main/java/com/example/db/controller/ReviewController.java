@@ -22,13 +22,13 @@ public class ReviewController {
         return reviewService.searchReviews(keyword);
     }
 
-    @GetMapping("/product/{productId}")
+    @GetMapping("/{productId}")
     public List<ReviewDTO> getReviewsByProductId(@PathVariable("productId") Long productId) {
         return reviewService.getReviewsByProductId(productId);
     }
 
-    @GetMapping("/{reviewId}")
-    public Review getDetailReview(@PathVariable("reviewId") Long reviewId) {
+    @GetMapping("/detail/{reviewId}")
+    public ReviewDTO getDetailReview(@PathVariable("reviewId") Long reviewId) {
         return reviewService.getReviewByReviewId(reviewId);
     }
 

@@ -1,7 +1,9 @@
 package com.example.db.jdbc;
 
+import com.example.db.dto.CommentDTOWithUsername;
 import com.example.db.dto.ReviewDTO;
 import com.example.db.entity.Review;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -80,9 +82,13 @@ public class ReviewRepository {
         return template.query(sql, reviewRowMapper, productId);
     }
 
-    public Review findReviewWithReviewId(Long reviewId){
-        String sql = "SELECT * FROM review WHERE review_id = ?";
-        return template.queryForObject(sql, reviewRowMapper, reviewId);
+    public ReviewDTO findReviewWithReviewId(Long reviewId){
+        String sql = "SELECT r.review_id, r.user_id, r.product_id, r.review_title, " +
+                "r.review_content, r.create_id, r.create_time, r.update_id, r.update_time, c.username " +
+                "FROM review r " +
+                "JOIN account c ON r.user_id = c.id " +
+                "WHERE r.review_id = ?";
+        return template.queryForObject(sql,  new BeanPropertyRowMapper<>(ReviewDTO.class), reviewId);
     }
 
     public List<ReviewDTO> findReviewsWithUsernameByProductId(Long productId) {
