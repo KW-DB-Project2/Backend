@@ -28,7 +28,7 @@ public class ReviewService {
         return reviewRepository.findReviewsWithUsernameByProductId(productId);
     }
 
-    public Review getReviewByReviewId(Long reviewId) {
+    public ReviewDTO getReviewByReviewId(Long reviewId) {
         return reviewRepository.findReviewWithReviewId(reviewId);
     }
 

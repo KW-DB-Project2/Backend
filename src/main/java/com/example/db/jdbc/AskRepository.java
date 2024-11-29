@@ -1,6 +1,7 @@
 package com.example.db.jdbc;
 
 import com.example.db.dto.AskDTO;
+import com.example.db.dto.AskDTOWithUsername;
 import com.example.db.entity.Ask;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
@@ -27,6 +28,25 @@ public class AskRepository {
         String sql = "select * from ask where product_id = ?";
 
         return jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(Ask.class),productId);
+    }
+
+    public List<AskDTOWithUsername> getAllAskWithName(Long productId){
+        String sql = "SELECT a.ask_id, a.user_id, a.product_id, u.username, a.ask_content, " +
+                    "a.create_id, a.create_time, a.update_id, a.update_time " +
+                    "FROM ask a " +
+                    "JOIN account u ON a.user_id = u.id " +
+                    "WHERE a.product_id = ?";
+
+        return jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(AskDTOWithUsername.class),productId);
+    }
+
+    public AskDTOWithUsername getAskById(Long askId){
+        String sql = "SELECT a.ask_id, a.user_id, a.product_id, u.username, a.ask_content, " +
+                "a.create_id, a.create_time, a.update_id, a.update_time " +
+                "FROM ask a " +
+                "JOIN account u ON a.user_id = u.id " +
+                "WHERE a.ask_id = ?";
+        return jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<>(AskDTOWithUsername.class),askId);
     }
 
     public Ask insertAsk(Ask ask){

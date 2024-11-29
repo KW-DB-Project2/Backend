@@ -11,13 +11,14 @@ import java.util.Date;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class ReviewDTO {
-    private Long reviewId;
+public class CommentDTOWithUsername {
+
+    private Long commentId;
     private Long userId;
     private Long productId;
-    private String reviewTitle;
-    private String reviewContent;
-    private String username;  // 추가된 필드
+    private Long reviewId;
+    private String username;
+    private String commentContent;
     private Long createId;
     private Date createTime;
     private Long updateId;
