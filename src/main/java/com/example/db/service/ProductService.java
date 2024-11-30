@@ -1,6 +1,7 @@
 package com.example.db.service;
 
 import com.example.db.dto.ProductDTO;
+import com.example.db.dto.minMaxAvgDTO;
 import com.example.db.entity.Product;
 import com.example.db.jdbc.ProductRepository;
 import lombok.AllArgsConstructor;
@@ -85,6 +86,13 @@ public class ProductService {
         productRepository.buyProduct(productId);
     }
 
+    public List<Product>getProductByOrder(String DescOrAsc){
+        return productRepository.getProductByDescOrAsc(DescOrAsc);
+    }
+
+    public minMaxAvgDTO getMinMaxAvgPrice(){
+        return productRepository.getMinMaxAvgPrice();
+    }
 
     //해당 user의 id와 product의 userId와 비교하여 맞으면 true, 아니면 false
     public boolean isProductOwnedByUser(Long productId, Long userId){

@@ -1,6 +1,8 @@
 package com.example.db.jdbc;
 
+import com.example.db.dto.minMaxAvgDTO;
 import com.example.db.entity.Product;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
@@ -8,6 +10,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Service;
 
 import java.sql.PreparedStatement;
 import java.sql.Timestamp;
@@ -15,6 +18,7 @@ import java.util.Date;
 import java.util.List;
 
 @Repository
+@Slf4j
 public class ProductRepository {
 
     private final JdbcTemplate jdbcTemplate;
@@ -105,5 +109,15 @@ public class ProductRepository {
     public void buyProduct(Long productId){
         String sql = "UPDATE product SET product_status = 0 WHERE product_id = ?";
         jdbcTemplate.update(sql,productId);
+    }
+
+
+    public minMaxAvgDTO getMinMaxAvgPrice(){
+        String sql = "select min(product_price) as min, max(product_price) as max,avg(product_price) as avg from product";
+        return jdbcTemplate.queryForObject(sql,new BeanPropertyRowMapper<>(minMaxAvgDTO.class));
+    }
+    public List<Product> getProductByDescOrAsc(String order){
+        String sql = "select * from product order by product_price " +order+" limit 5";
+        return jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(Product.class));
     }
 }

@@ -1,6 +1,7 @@
 package com.example.db.controller;
 
 import com.example.db.dto.ProductDTO;
+import com.example.db.dto.minMaxAvgDTO;
 import com.example.db.entity.Product;
 import com.example.db.entity.Transaction;
 import com.example.db.service.ProductService;
@@ -71,6 +72,17 @@ public class ProductController {
             e.printStackTrace();
         }
         return ResponseEntity.ok("product_status changed 0");
+    }
+
+    @GetMapping("/order")
+    public ResponseEntity<?> getProductByOrder(@RequestParam String descOrAsc){
+        log.info(descOrAsc);
+        return ResponseEntity.ok(productService.getProductByOrder(descOrAsc));
+    }
+
+    @GetMapping("/minMaxAvg")
+    public ResponseEntity<minMaxAvgDTO> getMinMaxAvgPrice(){
+        return ResponseEntity.ok(productService.getMinMaxAvgPrice());
     }
 
 
