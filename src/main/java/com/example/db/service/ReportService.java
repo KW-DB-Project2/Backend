@@ -1,6 +1,7 @@
 package com.example.db.service;
 
 import com.example.db.dto.ProductReportDTO;
+import com.example.db.dto.ProductReportDTOWithId;
 import com.example.db.dto.ReviewReportDTO;
 import com.example.db.entity.ProductReport;
 import com.example.db.entity.ReviewReport;
@@ -45,7 +46,7 @@ public class ReportService {
         return reportRepository.createReviewReport(reviewReport);
     }
 
-    public List<ProductReport> getAllProductReport(){
+    public List<ProductReportDTOWithId> getAllProductReport(){
         return reportRepository.getAllProductReport();
     }
 
