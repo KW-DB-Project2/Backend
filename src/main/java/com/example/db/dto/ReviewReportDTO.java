@@ -12,6 +12,6 @@ import lombok.NoArgsConstructor;
 public class ReviewReportDTO {
     private Long reviewReportId;
     private Long userId;
-    private Long productId;
+    private Long reviewId;
     private String reviewReportContent;
 }

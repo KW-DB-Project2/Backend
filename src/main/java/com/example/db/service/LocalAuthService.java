@@ -50,6 +50,11 @@ public class LocalAuthService {
                 .filter(acc -> passwordEncoder.matches(rawPassword, acc.getPassword()))
                 .orElseThrow(() -> new IllegalArgumentException("Invalid id or password"));
 
+        // BAN 역할 확인
+        if (account.getRole() == UserRole.BAN) {
+            throw new IllegalArgumentException("This account is banned and cannot log in.");
+        }
+
         if (adminEmails.contains(account.getEmail()) && !account.getRole().equals(UserRole.ADMIN)) {
             account.setRole(UserRole.ADMIN);
             memberRepository.updateRole(account.getId(), UserRole.ADMIN);

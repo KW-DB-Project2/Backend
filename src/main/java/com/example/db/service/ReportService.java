@@ -35,7 +35,7 @@ public class ReportService {
     public ReviewReport createReviewReport(ReviewReportDTO reviewReportDTO){
         ReviewReport reviewReport = ReviewReport.builder()
                 .userId(reviewReportDTO.getUserId())
-                .productId(reviewReportDTO.getProductId())
+                .reviewId(reviewReportDTO.getReviewId())
                 .reviewReportContent(reviewReportDTO.getReviewReportContent())
                 .createId(reviewReportDTO.getUserId())
                 .createTime(new Date())

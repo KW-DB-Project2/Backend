@@ -177,6 +177,15 @@ public class MemberRepository {
         template.update(sql, account.getEmail(), account.getPhoneNumber(), account.getLoginId());
     }
 
+    public void deleteById(Long id){
+        String sql = "DELETE FROM account WHERE id = ?";
+        int rowsAffected = template.update(sql, id);
+        if(rowsAffected == 0){
+            throw new RuntimeException("Failed to delete user: No user found with id " + id);
+        }
+    }
+
+
     public Long generateRandomLoginId(int digits){
         Random random = new Random();
         Long loginId;

@@ -99,6 +99,11 @@ public class KakaoAuthService {
                 account.setRole(UserRole.USER);
             }
 
+            // BAN 역할 확인
+            if (account.getRole() == UserRole.BAN) {
+                throw new IllegalArgumentException("This account is banned and cannot log in.");
+            }
+
         } catch (Exception e) {
             loginResponseDto.setLoginSuccess(false);
             e.printStackTrace();

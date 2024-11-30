@@ -14,7 +14,7 @@ import java.util.Date;
 public class ReviewReport {
     private Long reviewReportId;
     private Long userId;
-    private Long productId;
+    private Long reviewId;
     private String reviewReportContent;
     private Long createId;
     private Date createTime;

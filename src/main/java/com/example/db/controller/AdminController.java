@@ -71,10 +71,35 @@ public class AdminController {
         }
     }
 
+    @PutMapping("/users/{userId}/rank/change")
+    public ResponseEntity<?> changeUserRank(@PathVariable("userId") Long userId) {
+        try {
+            adminService.lowerRank(userId);
+        }catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }catch (IllegalStateException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+        return ResponseEntity.ok("User Rank changed");
+    }
+
     @GetMapping("/transactions/monthly")
     public ResponseEntity<?> getMonthlyTransactionsPrice() {
         List<MonthlyTransactionData> monthlyTransactionData = adminService.getMonthlyTransactionData();
         return ResponseEntity.ok(monthlyTransactionData);
+    }
+
+    @DeleteMapping("/delete/{userId}")
+    public ResponseEntity<?> deleteUser(@PathVariable("userId") Long userId) {
+        try{
+            adminService.deleteById(userId);
+            return ResponseEntity.ok("User deleted successfully");
+        }catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+
     }
 
 
