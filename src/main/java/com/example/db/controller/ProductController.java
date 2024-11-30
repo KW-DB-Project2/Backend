@@ -2,7 +2,9 @@ package com.example.db.controller;
 
 import com.example.db.dto.ProductDTO;
 import com.example.db.entity.Product;
+import com.example.db.entity.Transaction;
 import com.example.db.service.ProductService;
+import com.example.db.service.TransactionService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,10 +22,12 @@ import java.util.List;
 public class ProductController {
 
     private final ProductService productService;
+    private final TransactionService transactionService;
 
     @Autowired
-    public ProductController(ProductService productService) {
+    public ProductController(ProductService productService, TransactionService transactionService) {
         this.productService = productService;
+        this.transactionService = transactionService;
     }
 
     @PostMapping("/add")
@@ -55,6 +59,18 @@ public class ProductController {
     public ResponseEntity<?> deleteProduct(@PathVariable Long productId,Authentication authentication){
         productService.deleteProduct(productId);
         return ResponseEntity.ok("delete complete successfully!");
+    }
+
+    @PutMapping("/buy/{productId}")
+    public ResponseEntity<?> buyProduct(@PathVariable Long productId, @RequestBody Transaction transaction){
+        try{
+            productService.buyProduct(productId);
+            transactionService.saveTransaction(transaction);
+        }catch(Exception e){
+            log.error("product/buy error");
+            e.printStackTrace();
+        }
+        return ResponseEntity.ok("product_status changed 0");
     }
 
 
