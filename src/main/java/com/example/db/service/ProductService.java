@@ -80,6 +80,11 @@ public class ProductService {
         return deleteRows > 0;
     }
 
+    public void buyProduct(Long productId){
+        productRepository.buyProduct(productId);
+    }
+
+
     //해당 user의 id와 product의 userId와 비교하여 맞으면 true, 아니면 false
     public boolean isProductOwnedByUser(Long productId, Long userId){
         Product product = productRepository.findById(productId);

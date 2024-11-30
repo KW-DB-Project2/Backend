@@ -101,4 +101,9 @@ public class ProductRepository {
         String sql = "DELETE FROM product WHERE product_id = ?";
         return jdbcTemplate.update(sql,productId);
     }
+
+    public void buyProduct(Long productId){
+        String sql = "UPDATE product SET product_status = 0 WHERE product_id = ?";
+        jdbcTemplate.update(sql,productId);
+    }
 }

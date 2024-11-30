@@ -3,6 +3,8 @@ package com.example.db.service;
 import com.example.db.dto.MonthlyTransactionData;
 import com.example.db.entity.Transaction;
 import com.example.db.jdbc.TransactionRepository;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,8 +22,13 @@ public class TransactionService {
     }
 
 
-    public List<MonthlyTransactionData> getMonthlyTransactions() {
-        return transactionRepository.getMonthlyTransactions();
+//    public List<MonthlyTransactionData> getMonthlyTransactions() {
+//        return transactionRepository.getMonthlyTransactions();
+//    }
+
+    @Transactional
+    public List<MonthlyTransactionData> getTransactionByUser(Long userId){
+        return transactionRepository.getTransactionByUser(userId);
     }
 
     @Transactional
