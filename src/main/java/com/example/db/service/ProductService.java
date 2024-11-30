@@ -80,6 +80,7 @@ public class ProductService {
         return deleteRows > 0;
     }
 
+    @Transactional
     public void buyProduct(Long productId){
         productRepository.buyProduct(productId);
     }
