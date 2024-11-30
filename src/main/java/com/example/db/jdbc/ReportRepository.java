@@ -1,5 +1,7 @@
 package com.example.db.jdbc;
 
+import com.example.db.dto.ProductReportDTO;
+import com.example.db.dto.ProductReportDTOWithId;
 import com.example.db.entity.ProductReport;
 import com.example.db.entity.ReviewReport;
 import lombok.AllArgsConstructor;
@@ -66,9 +68,15 @@ public class ReportRepository {
         return jdbcTemplate.queryForObject(selectSql,new BeanPropertyRowMapper<>(ReviewReport.class),generatedReviewReportId);
     }
 
-    public List<ProductReport> getAllProductReport(){
-        String sql = "SELECT * FROM product_report";
-        return jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(ProductReport.class));
+    public List<ProductReportDTOWithId> getAllProductReport(){
+        String sql = "SELECT pr.product_report_id, pr.user_id AS userId, " +
+                "pr.product_id, " +
+                "p.user_id AS reportedUserId, " +
+                "pr.product_report_content, " +
+                "pr.create_id, pr.create_time, pr.update_id, pr.update_time " +
+                "FROM product_report pr " +
+                "JOIN product p ON pr.product_id = p.product_id";
+        return jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(ProductReportDTOWithId.class));
     }
 
     public List<ReviewReport> getAllReviewReport(){
