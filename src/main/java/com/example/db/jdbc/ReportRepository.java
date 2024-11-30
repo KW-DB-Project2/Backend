@@ -43,7 +43,7 @@ public class ReportRepository {
     }
 
     public ReviewReport createReviewReport(ReviewReport reviewReport){
-        final String sql = "insert into review_report(user_id, product_id, review_report_content, create_id, create_time, update_id, update_time) "+
+        final String sql = "insert into review_report(user_id, review_id, review_report_content, create_id, create_time, update_id, update_time) "+
                 "values(?,?,?,?,?,?,?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
         Timestamp createTime = new Timestamp(reviewReport.getCreateTime().getTime());
@@ -51,7 +51,7 @@ public class ReportRepository {
         jdbcTemplate.update(con->{
             PreparedStatement ps = con.prepareStatement(sql, new String[] {"review_report_id"});
             ps.setLong(1, reviewReport.getUserId());
-            ps.setLong(2, reviewReport.getProductId());
+            ps.setLong(2, reviewReport.getReviewId());
             ps.setString(3, reviewReport.getReviewReportContent());
             ps.setLong(4, reviewReport.getCreateId());
             ps.setTimestamp(5, createTime);

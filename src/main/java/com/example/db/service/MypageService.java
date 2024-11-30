@@ -98,6 +98,15 @@ public class MypageService {
         return false;
     }
 
+    @Transactional
+    public void deleteById(Long id) {
+        Optional<Account> optionalAccount = memberRepository.findById(id);
+        if(optionalAccount.isEmpty()){
+            throw new IllegalStateException("Account not found");
+        }
+        memberRepository.deleteById(id);
+    }
+
 
     /*
 

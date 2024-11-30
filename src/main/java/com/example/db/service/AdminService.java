@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -55,8 +56,35 @@ public class AdminService {
         return memberRepository.findAllAccount();
     }
 
+    @Transactional
     public void suspendUser(Long userId) {
         memberRepository.updateRole(userId, UserRole.BAN);
+    }
+
+    @Transactional
+    public void lowerRank(Long userId){
+        Optional<Account> byId = memberRepository.findById(userId);
+        if(byId.isPresent()){
+            Account account = byId.get();
+            if(account.getRole() == UserRole.ADMIN) {
+                memberRepository.updateRole(userId, UserRole.USER);
+            }else{
+                throw new IllegalStateException("Current user is NOT ADMIN");
+            }
+        }else {
+            throw new IllegalArgumentException("Current user does not exist");
+        }
+
+
+    }
+
+    @Transactional
+    public void deleteById(Long id) {
+        Optional<Account> optionalAccount = memberRepository.findById(id);
+        if(optionalAccount.isEmpty()){
+            throw new IllegalStateException("Account not found");
+        }
+        memberRepository.deleteById(id);
     }
 
     public List<MonthlyTransactionData> getMonthlyTransactionData() {
