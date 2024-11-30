@@ -47,11 +47,23 @@ public class CommentController {
         return commentService.getCommentById(commentId);
     }
 
+    /*
     @DeleteMapping("/{commentId}")
     public String deleteComment(@PathVariable("commentId") Long commentId, Authentication authentication) {
         try {
             Long id = (Long)authentication.getPrincipal();
             commentService.deleteComment(commentId, id);
+            return "Successfully comment deleted";
+        } catch (RuntimeException e){
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, e.getMessage());
+        }
+    }*/
+
+    @DeleteMapping("/{commentId}")
+    public String deleteComment(@PathVariable("commentId") Long commentId, @RequestParam("userId") Long userId) {
+        try {
+            //Long id = (Long)authentication.getPrincipal();
+            commentService.deleteComment(commentId, userId);
             return "Successfully comment deleted";
         } catch (RuntimeException e){
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, e.getMessage());
