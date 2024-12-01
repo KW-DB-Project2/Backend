@@ -25,6 +25,7 @@ public class TransactionRepository {
     }
 
 
+    /*
     public List<MonthlyTransactionData> getMonthlyTransactions() {
         String sql = "SELECT MONTH(transaction_date) as month, " +
                 "       COUNT(*) as count, " +
@@ -33,6 +34,19 @@ public class TransactionRepository {
                 "GROUP BY MONTH(transaction_date)";
         return jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(MonthlyTransactionData.class));
     }
+    */
+    public List<MonthlyTransactionData> getMonthlyTransactions() {
+        String sql = "SELECT YEAR(transaction_date) as year, " +
+                "       MONTH(transaction_date) as month, " +
+                "       COUNT(*) as count, " +
+                "       SUM(transaction_amount) as totalAmount " +
+                "FROM transactions " +
+                "GROUP BY YEAR(transaction_date), MONTH(transaction_date) " +
+                "ORDER BY YEAR(transaction_date), MONTH(transaction_date) ASC";
+        return jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(MonthlyTransactionData.class));
+    }
+
+
 
 
     public int saveTransaction(Transaction transaction){
