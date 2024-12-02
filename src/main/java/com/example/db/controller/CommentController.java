@@ -28,9 +28,13 @@ public class CommentController {
     }
 
     @PutMapping("/{commentId}")
-    public Comment updateComment(@PathVariable("commentId") Long commentId,@RequestBody CommentDTO commentDTO) {
-        commentDTO.setCommentId(commentId);
-        return commentService.updateComment(commentDTO);
+    public ResponseEntity<?> updateComment(@PathVariable("commentId") Long commentId,@RequestBody CommentDTO commentDTO) {
+        try{
+            commentDTO.setCommentId(commentId);
+            return ResponseEntity.ok(commentService.updateComment(commentDTO));
+        }catch (IllegalStateException e){
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());
+        }
     }
     @GetMapping("/commentId")
     public Long getCommentId(@RequestBody CommentDTO commentDTO){

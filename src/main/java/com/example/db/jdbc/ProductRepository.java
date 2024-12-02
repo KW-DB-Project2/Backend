@@ -115,9 +115,13 @@ public class ProductRepository {
     public minMaxAvgDTO getMinMaxAvgPrice(){
         String sql = "select min(product_price) as min, max(product_price) as max,avg(product_price) as avg from product";
         return jdbcTemplate.queryForObject(sql,new BeanPropertyRowMapper<>(minMaxAvgDTO.class));
+
     }
     public List<Product> getProductByDescOrAsc(String order){
-        String sql = "select * from product order by product_price " +order+" limit 5";
+        if(!"ASC".equalsIgnoreCase(order) && !"DESC".equalsIgnoreCase(order)){
+            throw new IllegalArgumentException("유효하지 않은 접근입니다.");
+        }
+        String sql = "select * from product where product_status = 1 order by product_price " +order+" limit 5";
         return jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(Product.class));
     }
 }

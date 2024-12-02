@@ -72,14 +72,12 @@ public class CommentService {
                 .createTime(null)
                 .updateTime(new Date())
                 .build();
-        Comment returnComment = new Comment();
         try{
-            returnComment = commentRepository.updateComment(comment);
+            return commentRepository.updateComment(comment);
         }catch (Exception e){
-            log.error("comment update failed");
-            e.printStackTrace();
+            log.error("comment update failed: {}", e.getMessage());
+            throw new IllegalStateException("코멘트 업데이트 중 오류 발생: " + e.getMessage(), e);
         }
-        return returnComment;
     }
 
     public List<CommentDTOWithUsername> getAllComments(Long reviewId){
