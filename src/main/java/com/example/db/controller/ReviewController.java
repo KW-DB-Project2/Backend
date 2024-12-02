@@ -38,10 +38,10 @@ public class ReviewController {
         reviewService.createReview(review);
     }
 
-    @PutMapping
-    public void updateReview(@RequestBody Review review) {
+    @PutMapping("/{reviewId}")
+    public void updateReview(@PathVariable("reviewId") Long reviewId, @RequestBody Review review) {
         try{
-            reviewService.updateReview(review);
+            reviewService.updateReview(reviewId, review);
         }catch (RuntimeException e){
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, e.getMessage());
         }

@@ -63,9 +63,9 @@ public class ReviewRepository {
         return template.update(sql, review.getUserId(), review.getProductId(),  review.getReviewTitle(), review.getReviewContent(), review.getUserId());
     }
 
-    public int updateReview(Review review) {
+    public int updateReview(Long reviewId, Review review) {
         String sql = "UPDATE review SET review_title = ?, review_content = ?, update_id = ?, update_time = NOW() WHERE review_id = ? AND user_id = ?";
-        return template.update(sql, review.getReviewTitle(), review.getReviewContent(), review.getUserId(), review.getReviewId(), review.getUserId());
+        return template.update(sql, review.getReviewTitle(), review.getReviewContent(), review.getUserId(), reviewId, review.getUserId());
     }
 
     public int deleteReview(Long reviewId, Long userId) {

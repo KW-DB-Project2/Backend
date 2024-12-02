@@ -33,8 +33,8 @@ public class ReviewService {
     }
 
     @Transactional
-    public void updateReview(Review review) {
-        int rowsAffected = reviewRepository.updateReview(review);
+    public void updateReview(Long reviewId, Review review) {
+        int rowsAffected = reviewRepository.updateReview(reviewId, review);
         if(rowsAffected == 0){
             throw new RuntimeException("You are not authorized to update this review Or There is no change");
         }
