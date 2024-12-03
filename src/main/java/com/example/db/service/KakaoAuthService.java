@@ -93,16 +93,17 @@ public class KakaoAuthService {
                 throw new IllegalArgumentException("Failed to fetch account information from Kakao");
             }
 
+            // BAN 역할 확인
+            if (account.getRole() == UserRole.BAN) {
+                throw new IllegalArgumentException("This account is banned and cannot log in.");
+            }
+
             if(adminEmails.contains(account.getEmail())){
                 account.setRole(UserRole.ADMIN);
             }else {
                 account.setRole(UserRole.USER);
             }
 
-            // BAN 역할 확인
-            if (account.getRole() == UserRole.BAN) {
-                throw new IllegalArgumentException("This account is banned and cannot log in.");
-            }
 
         } catch (Exception e) {
             loginResponseDto.setLoginSuccess(false);
@@ -119,6 +120,11 @@ public class KakaoAuthService {
                 isNewUser = true;
                 memberRepository.save(account);
             } else {
+                // BAN 역할 확인
+                if (existOwner.getRole() == UserRole.BAN) {
+                    throw new IllegalArgumentException("This account is banned and cannot log in.");
+                }
+
                 // 사용자 있으면 기존 사용자 정보 사용
                 if(!existOwner.getRole().equals(account.getRole())){
                     existOwner.setRole(account.getRole());
@@ -148,8 +154,6 @@ public class KakaoAuthService {
             }
 
             headers.add("Authorization", "Bearer " + jwt);
-
-            System.out.println("!!isNewUser: " + isNewUser);
 
             loginResponseDto.setLoginSuccess(true);
             loginResponseDto.setNewUser(isNewUser);
