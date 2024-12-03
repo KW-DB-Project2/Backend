@@ -85,6 +85,20 @@ public class AdminController {
         return ResponseEntity.ok("User Rank changed");
     }
 
+    @PutMapping("/users/{userId}/rank/admin")
+    public ResponseEntity<?> upgradeAdminRank(@PathVariable("userId") Long userId) {
+        try {
+            adminService.upgradeAdmin(userId);
+        }catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }catch (IllegalStateException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+        return ResponseEntity.ok("User Rank changed");
+    }
+
     @GetMapping("/transactions/monthly")
     public ResponseEntity<?> getMonthlyTransactionsPrice() {
         List<MonthlyTransactionData> monthlyTransactionData = adminService.getMonthlyTransactionData();
@@ -101,8 +115,5 @@ public class AdminController {
         }
 
     }
-
-
-
 
 }

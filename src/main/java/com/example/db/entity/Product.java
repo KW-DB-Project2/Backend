@@ -12,7 +12,6 @@ public class Product {
     private Long productId;
     private Long userId;
     private String productTitle;
-    //private String productClass;
     private String productContent;
     private Long productPrice;
     private boolean productStatus;

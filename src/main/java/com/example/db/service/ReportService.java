@@ -3,6 +3,7 @@ package com.example.db.service;
 import com.example.db.dto.ProductReportDTO;
 import com.example.db.dto.ProductReportDTOWithId;
 import com.example.db.dto.ReviewReportDTO;
+import com.example.db.dto.ReviewReportWithTitle;
 import com.example.db.entity.ProductReport;
 import com.example.db.entity.ReviewReport;
 import com.example.db.jdbc.ReportRepository;
@@ -50,7 +51,7 @@ public class ReportService {
         return reportRepository.getAllProductReport();
     }
 
-    public List<ReviewReport> getAllReviewReport(){
+    public List<ReviewReportWithTitle> getAllReviewReport(){
         return reportRepository.getAllReviewReport();
     }
 

@@ -2,6 +2,7 @@ package com.example.db.jdbc;
 
 import com.example.db.dto.ProductReportDTO;
 import com.example.db.dto.ProductReportDTOWithId;
+import com.example.db.dto.ReviewReportWithTitle;
 import com.example.db.entity.ProductReport;
 import com.example.db.entity.ReviewReport;
 import lombok.AllArgsConstructor;
@@ -79,8 +80,31 @@ public class ReportRepository {
         return jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(ProductReportDTOWithId.class));
     }
 
+    /*
     public List<ReviewReport> getAllReviewReport(){
         String sql = "SELECT * FROM review_report";
         return jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(ReviewReport.class));
     }
+    */
+
+    public List<ReviewReportWithTitle> getAllReviewReport(){
+        String sql = """
+        SELECT 
+            rr.REVIEW_REPORT_ID,
+            rr.USER_ID,
+            rr.REVIEW_ID,
+            rr.REVIEW_REPORT_CONTENT,
+            rr.CREATE_ID,
+            rr.CREATE_TIME,
+            rr.UPDATE_ID,
+            rr.UPDATE_TIME,
+            p.PRODUCT_TITLE
+        FROM review_report rr
+        JOIN review r ON rr.REVIEW_ID = r.REVIEW_ID
+        JOIN product p ON r.PRODUCT_ID = p.PRODUCT_ID
+        """;
+        return jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(ReviewReportWithTitle.class));
+    }
+
+
 }
