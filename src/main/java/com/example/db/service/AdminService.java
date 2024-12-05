@@ -129,8 +129,6 @@ public class AdminService {
         Optional<Account> optionalAccount = memberRepository.findById(id);
         if(optionalAccount.isEmpty()){
             throw new IllegalStateException("Account not found");
-        }else if(optionalAccount.get().getRole() != UserRole.ADMIN){
-            throw new IllegalStateException("Current user is not ADMIN");
         }
         memberRepository.deleteById(id);
     }
