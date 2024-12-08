@@ -20,7 +20,7 @@ public class TransactionController {
     }
 
     @GetMapping("monthly/{userId}")
-    public List<MonthlyTransactionData> getTransactionsByUser(@PathVariable Long userId){
+    public List<MonthlyTransactionData> getTransactionsByUser(@PathVariable("userId") Long userId){
         return transactionService.getTransactionByUser(userId);
     }
 
