@@ -15,3 +15,4 @@
 
 ![스크린샷 2025-02-09 082548](https://github.com/user-attachments/assets/b2cffd1a-38f7-4c16-bb04-79a9949cac43)
 
+이외에 리뷰 작성, 리뷰에 대한 답글 작성 및 상세 정보 관리 & 사용자의 판매량에 대한 수치 등의 확인 가능
